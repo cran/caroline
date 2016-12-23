@@ -77,7 +77,7 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
   #updating postgresql sequence
   if(pg.update.seq){
     if(class(con)=='PostgreSQLConnection'){
-      r <- dbSendQuery(con, paste("SELECT pg_catalog.setval(pg_get_serial_sequence('",table.name,"', 'id'), (SELECT MAX(id) FROM ",table.name,")+1);",sep=''))
+      r <- dbSendQuery(con, paste("SELECT pg_catalog.setval(pg_get_serial_sequence('",table.name,"', 'id'), (SELECT MAX(id) FROM ",table.name,"));",sep=''))
       dbClearResult(r)
     }else{
       stop('pg.update.seq=TRUE flag not compatable with database connection type')
