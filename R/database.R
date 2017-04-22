@@ -1,4 +1,4 @@
-dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, row.names=FALSE, pg.update.seq=FALSE, ...){
+dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, row.names=FALSE, pg.update.seq=FALSE, silent = F, ...){
   fields <- dbListFields(con, table.name)
   fields <- fields[!grepl('\\.\\.pg\\.dropped',fields)]
   
@@ -50,7 +50,7 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
   
   ## check for length mismatches    
   db.precisions <- nv(db.col.info, 'precision')
-  df.nchars <- sapply(df, function(c) max(nchar(c)))
+  df.nchars <- sapply(df, function(c) max(nchar(c), na.rm = T))
   prec.reqd <- db.precisions > 0
   too.long <- db.precisions[prec.reqd] < df.nchars[prec.reqd]
   if(any(too.long))
@@ -71,7 +71,7 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
   #stop
   
   ## load table
-  print(paste("loading", table.name, "table to database"))
+  if(!silent) print(paste("loading", table.name, "table to database"))
   db.write <- dbWriteTable(con, table.name, df, row.names=row.names, ...)
   
   #updating postgresql sequence
