@@ -4,7 +4,7 @@
 ## table to dataframe (with names!)
 tab2df <- function(x,...){
 
-  is.tabrix <- class(x)[1] %in% c('table','matrix')
+  is.tabrix <- is.table(x) | is.matrix(x) #class(x)[1] %in% c('table','matrix')
   row.nms <- rownames(x)
   
   if(length(dim(x))>1){ #NCOL(x)>1){
@@ -39,7 +39,7 @@ tab2df <- function(x,...){
 
 nv <- function(x, name){
 
-  if(class(x)=='data.frame'){
+  if(is.data.frame(x)){
     v <- x[,name[1]]
     if(length(name)==2)
       names(v) <- x[,name[2]]

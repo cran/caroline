@@ -174,7 +174,7 @@ stats <- function (x, by, quantiles=c(.25,.75))
   }
 .huber.NR <- function (x, c = 1.28, iter = 20)
   {
-      require(MASS)
+      requireNamespace("MASS")
       mu.k <- matrix(nrow = iter, ncol = 1)
       mu.k[1] <- median(x)
       for (i in 1:iter) {
@@ -301,7 +301,7 @@ violins <- function (x, by, range = 1.5, h = NULL, ylim = NULL, names = NULL,
 
 {
     options(warnings=-1)
-    require(sm)
+    requireNamespace("sm")
     if(is.data.frame(x)) x<-as.list.data.frame(x)  ## convert dataframe to list if needed
     if (!missing(by)) {                            ## cope with 'by' variable
     if(is.numeric(by)) x<-.cat2list(x[order(by)],sort(by))  ## if 'by' is numeric so sort it
@@ -332,8 +332,8 @@ violins <- function (x, by, range = 1.5, h = NULL, ylim = NULL, names = NULL,
     stderrupper <- vector(mode = "numeric", length = n)
     base <- vector(mode = "list", length = n)
     height <- vector(mode = "list", length = n)
-    medCI05 <- vector(mode = "list", length = n)
-  	medCI95 <- vector(mode = "list", length = n)
+    #medCI05 <- vector(mode = "list", length = n)
+  	#medCI95 <- vector(mode = "list", length = n)
   	decile <- matrix(NA, nrow=n,ncol=9)
     baserange <- c(Inf, -Inf)
     args <- list(display = "none")
@@ -348,8 +348,8 @@ violins <- function (x, by, range = 1.5, h = NULL, ylim = NULL, names = NULL,
         q3[i] <- quantile(data,.75,na.rm=TRUE)
         q.9[i] <- quantile(data, quantiles[2],na.rm=TRUE)
         med[i] <- median(data,na.rm=TRUE)
-        medCI05[i] <- .ci.median(data)$ci[2]
-        medCI95[i] <- .ci.median(data)$ci[3]
+        #medCI05[i] <- .ci.median(data)$ci[2]    # bug fix
+        #medCI95[i] <- .ci.median(data)$ci[3]    # bug fix
         hubermu[i] <- .huber.mu(data)
         average[i] <- mean(data)
         iqd <- q3[i] - q1[i]
@@ -363,7 +363,7 @@ violins <- function (x, by, range = 1.5, h = NULL, ylim = NULL, names = NULL,
         stderrupper[i] <- average[i]+(sd(data)/sqrt(N))
         est.xlim <- c(min(lower[i], data.min), max(upper[i],
             data.max))
-        smout <- do.call("sm.density", c(list(data, xlim = est.xlim),
+        smout <- do.call(sm::sm.density, c(list(data, xlim = est.xlim),
             args))
         hscale <- 0.4/max(smout$estimate) * wex
         base[[i]] <- smout$eval.points
@@ -417,8 +417,8 @@ violins <- function (x, by, range = 1.5, h = NULL, ylim = NULL, names = NULL,
                 if(any(SD.or.SE=='SE')) lines(at[c(i+.05, i+.05)], c(stderrlower[i],
                     stderrupper[i]), lwd=lwd*4*wex, lty=lty)
                 points(at[i], med[i], pch = pchMed, col = colMed)
-                if (CImed) rect(at[i] -boxwidth/1.6*wex, medCI05[i], at[i]+boxwidth/1.6*wex,
-                  medCI95[i])
+              #  if (CImed) rect(at[i] -boxwidth/1.6*wex, medCI05[i], at[i]+boxwidth/1.6*wex,
+              #    medCI95[i])
    
                 points(at[i], hubermu[i], pch=12, col=colMed)
                 points(at[i], average[i], pch=13, col=colMed)
@@ -457,8 +457,8 @@ violins <- function (x, by, range = 1.5, h = NULL, ylim = NULL, names = NULL,
                   at[c(i+.05, i+.05)], lwd=lwd*4*wex, lty=lty)
                 if(any(SD.or.SE=='SE')) lines(c(stderrlower[i], stderrupper[i]),
                   at[c(i+.05, i+.05)], lwd=lwd*4*wex, lty=lty)
-                if (CImed) rect(medCI05[i], at[i] -boxwidth/1.6*wex,
-                  medCI95[i], at[i]+boxwidth/1.6*wex)
+              #  if (CImed) rect(medCI05[i], at[i] -boxwidth/1.6*wex,
+              #    medCI95[i], at[i]+boxwidth/1.6*wex)
 
                # if (deciles) lines(decile[i], at[c(i-boxwidth/3*wex, i+boxwidth/3*wex)],lty=3)
 

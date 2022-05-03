@@ -63,7 +63,7 @@ pies <- function(x, show.labels = FALSE, show.slice.labels = FALSE, color.table 
     plot(x0, y0, pch='', ...)
     par(new=TRUE)
   }
-  if(class(x)!='list')
+  if(!is.list(x)) # class() !='list')
     stop("x must be a list")
   
   if(length(x) != length(x0) | length(x0) != length(y0))
@@ -258,7 +258,7 @@ hyperplot <- function(x, y=NULL, annout=1:length(x), name='hyperplot.imagemap', 
   ## create image
   png(img.path, width=w, height=h)
 
-  if(class(x)=='data.frame')
+  if(is.data.frame(x)) #class(x)=='data.frame')
     stop('for data.frame input: x and y vectors should be in the annout table with x & y used to specify column names')
     	
   ## plot
@@ -384,7 +384,7 @@ hyperplot <- function(x, y=NULL, annout=1:length(x), name='hyperplot.imagemap', 
   with(map, cat(paste('<area shape="circle" coords="',x,',',y,',',r,'" href="',href,'" title="',idx,'"/>\n',sep='')),'\n')
   cat('</map>')
 
-  if(link == 'internal' & class(annout)=='data.frame'){
+  if(link == 'internal' & is.data.frame(annout)){ #class(annout)=='data.frame'){
     cat('<br><h5>Annotations</h5>')
     cat('<table border=1>','\n')
     cat(paste('<tr><th></th>', paste('<th>', names(annout),'</th>',collapse=''), '</tr>\n'))
@@ -466,11 +466,9 @@ heatmatrix <- function(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','righ
   if(!is.null(rownames(x))){
     clp2par <- nv(c(1,2),clp)
     clp2xadj <- nv(c(-1,1),clp) * xadj
-    clp2adj <- nv(c(1,0),clp); if(ylab.cntr) clp2adj <- nv(rep(.5,2),clp)
+    clp2adj <- nv(c(1,0),clp); if(ylab.cntr){ clp2adj <- nv(rep(.5,2),clp)}
     clp <- match.arg(clp)
-    text(x=par("usr")[clp2par[clp]] +clp2xadj[clp], y=nrow(x):1,
-adj=clp2adj[clp],
-         labels = rownames(x), xpd = TRUE, cex=cex.axis)
+    text(x=par("usr")[clp2par[clp]] +clp2xadj[clp], y=nrow(x):1, adj=clp2adj[clp], labels = rownames(x), xpd = TRUE, cex=cex.axis)
   }
   if(!is.null(colnames(x))){
     rlp2par <- nv(c(3,4),rlp)

@@ -1,10 +1,11 @@
 dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, row.names=FALSE, pg.update.seq=FALSE, ...){
-  fields <- dbListFields(con, table.name)
+  requireNamespace("DBI")
+  fields <- DBI::dbListFields(con, table.name)
   fields <- fields[!grepl('\\.\\.pg\\.dropped',fields)]
   
   ## add id column if missing
   if(add.id){
-    last.id.list <- dbGetQuery(con, paste("SELECT id FROM", table.name,"ORDER BY id DESC LIMIT 1"))
+    last.id.list <- DBI::dbGetQuery(con, paste("SELECT id FROM", table.name,"ORDER BY id DESC LIMIT 1"))
     if(length(last.id.list)==0)
       n <- 0
     else
@@ -37,8 +38,8 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
 
   
   ## BEGIN ERROR CHECKING
-  r <- dbSendQuery(con, paste("SELECT * FROM", table.name,"ORDER BY id DESC LIMIT 1"))
-  db.col.info <- dbColumnInfo(r); rownames(db.col.info) <- db.col.info$name
+  r <- DBI::dbSendQuery(con, paste("SELECT * FROM", table.name,"ORDER BY id DESC LIMIT 1"))
+  db.col.info <- DBI::dbColumnInfo(r); rownames(db.col.info) <- db.col.info$name
 
   ## check for na's which might prevent a load
   null.OK <- nv(db.col.info,'nullOK')
@@ -63,7 +64,7 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
   #if(length(type.mismatches)>0)
   #  warning(paste('The dataframe columns:',paste(type.mismatches, collapse=','),'may have type mismatches from their sclass mappings to the database table fields.'))
     
-  dbClearResult(r)
+  DBI::dbClearResult(r)
   
   ## check unique constrains
   #r <- dbGetQuery(con, paste("SELECT constraint_name FROM information_schema.table_constraints WHERE table_name = '",table.name,"'", sep=''))
@@ -72,13 +73,13 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
   
   ## load table
   print(paste("loading", table.name, "table to database"))
-  db.write <- dbWriteTable(con, table.name, df, row.names=row.names, ...)
+  db.write <- DBI::dbWriteTable(con, table.name, df, row.names=row.names, ...)
   
   #updating postgresql sequence
   if(pg.update.seq){
-    if(class(con)=='PostgreSQLConnection'){
-      r <- dbSendQuery(con, paste("SELECT pg_catalog.setval(pg_get_serial_sequence('",table.name,"', 'id'), (SELECT MAX(id) FROM ",table.name,")+1);",sep=''))
-      dbClearResult(r)
+    if(identical(class(con),'PostgreSQLConnection')){
+      r <- DBI::dbSendQuery(con, paste("SELECT pg_catalog.setval(pg_get_serial_sequence('",table.name,"', 'id'), (SELECT MAX(id) FROM ",table.name,")+1);",sep=''))
+      DBI::dbClearResult(r)
     }else{
       stop('pg.update.seq=TRUE flag not compatable with database connection type')
     }

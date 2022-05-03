@@ -20,9 +20,9 @@ parseArgString <- function(string, delimiter=',', min.param.ct=2, max.param.ct=2
       p.vect <- as.POSIXct(p.vect)  #as.Date
     else
       p.vect <- as(p.vect, class(param.range))
-    if(class(param.range) == 'factor')
+    if(is.factor(param.range)) # class() == 'factor')
       param.range <- as.character(param.range)
-    if(class(param.range) == 'character'){
+    if(is.character(param.range)){#} class()== 'character'){
       if(!all(p.vect %in% param.range))
         stop(paste('not all of the elements of your parameter list', string, 'could be found in the allowed possiblities list', paste(param.range,collapse=',')))
     }else{

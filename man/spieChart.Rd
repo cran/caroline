@@ -37,11 +37,10 @@
   D. G. Feitelson (2003), "Comparing Partitions with Spie Charts".
   School of Computer Science and Engineering,
   The Hebrew University of Jerusalem.
-  \url{http://www.cs.huji.ac.il/~feit/papers/Spie03TR.pdf}
+  \url{https://www.cs.huji.ac.il/w~feit/papers/Spie03TR.pdf}
 
-  Michael Friendly (2000), Gallery of Data Vizualisation :
-  The Best and Worst of Statistical Graphics.
-  \url{http://www.math.yorku.ca/SCS/Gallery/}
+  Michael Friendly (2022), Spie chart -- a comparison of two pie charts.
+  \url{https://www.datavis.ca/gallery/bright-ideas.php}
   }
 
 \examples{

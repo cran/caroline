@@ -34,18 +34,18 @@ spie <- function(p1, p2, init.angle=pi, multi, col = rainbow(length(x$radii)), b
   
   x <- .spie(p1, p2, init.angle=pi)
   
-  require(grid)
+  requireNamespace("grid")
   maxRadii <- max(x$radii)
 
-  grid.newpage()
+  grid::grid.newpage()
 
-  pushViewport(viewport(layout=grid.layout(1,1,respect=TRUE)))
-  pushViewport(dataViewport(maxRadii*c(-1.1,1.1),
+  grid::pushViewport(grid::viewport(layout=grid::grid.layout(1,1,respect=TRUE)))
+  grid::pushViewport(grid::dataViewport(maxRadii*c(-1.1,1.1),
                             maxRadii*c(-1.1,1.1),
                             layout.pos.col=1,
                             layout.pos.row=1))
   if(!missing(multi) & p1.circle)
-      grid.circle(x=0, y=0, r=sqrt(multi), gp=gpar(col="gray"), default.units="native")
+      grid::grid.circle(x=0, y=0, r=sqrt(multi), gp=grid::gpar(col="gray"), default.units="native")
 
   for(i in 1:length(x$radii)){
   
@@ -64,15 +64,15 @@ spie <- function(p1, p2, init.angle=pi, multi, col = rainbow(length(x$radii)), b
 
     if(p1.circle){
     ## background p1 circle
-    grid.polygon(x   = c(0,  cos(theta) ,0),
+    grid::grid.polygon(x   = c(0,  cos(theta) ,0),
                  y   = c(0,  sin(theta) ,0) ,
-                 gp  = gpar(fill=bg[i]),
+                 gp  = grid::gpar(fill=bg[i]),
                  default.units="native")
     }                 
     ## superimposed p2 circle
-    grid.polygon(x   = c(0, x$radii[i] * cos(theta) ,0),
+    grid::grid.polygon(x   = c(0, x$radii[i] * cos(theta) ,0),
                  y   = c(0, x$radii[i] * sin(theta) ,0) ,
-                 gp  = gpar(fill=col[i], lwd=this.lwd),
+                 gp  = grid::gpar(fill=col[i], lwd=this.lwd),
                  default.units="native")
 
 
@@ -81,15 +81,15 @@ spie <- function(p1, p2, init.angle=pi, multi, col = rainbow(length(x$radii)), b
 
     if(pie.labs){
 
-       grid.rect( x = cos(angleAnn)*maxx,
+       grid::grid.rect( x = cos(angleAnn)*maxx,
                  y = sin(angleAnn)*maxx,
-                 width = 1.5*stringWidth(x$namesSlices[i]),
-                 height = 1.5*stringHeight(x$namesSlices[i]),
+                 width = 1.5*grid::stringWidth(x$namesSlices[i]),
+                 height = 1.5*grid::stringHeight(x$namesSlices[i]),
                  default.units="native",
-                 gp = gpar(col=col[i], fill="white", lwd=2))
+                 gp = grid::gpar(col=col[i], fill="white", lwd=2))
  
 
-       grid.text(x$namesSlices[i],
+       grid::grid.text(x$namesSlices[i],
                 x=cos(angleAnn)*maxx,
                 y=sin(angleAnn)*maxx,
                 default.units="native")
@@ -99,20 +99,20 @@ spie <- function(p1, p2, init.angle=pi, multi, col = rainbow(length(x$radii)), b
   if(!missing(multi)){
 
    if(grid){
-      grid.lines(x=unit(0,"native"),
-                 y=unit(c(0, max(sqrt(multi))), "native"), gp=gpar(col="gray"))
+      grid::grid.lines(x=grid::unit(0,"native"),
+                 y=grid::unit(c(0, max(sqrt(multi))), "native"), gp=grid::gpar(col="gray"))
 
       if(grid.labs){
         for(i in multi){
           st <- paste("x", i)
-          sw <- stringWidth(st)
-          sh <- stringHeight(st)
+          sw <- grid::stringWidth(st)
+          sh <- grid::stringHeight(st)
   
-          grid.rect( x = unit(0, "native"),
-                   y = unit(sqrt(i),"native"),
+          grid::grid.rect( x = grid::unit(0, "native"),
+                   y = grid::unit(sqrt(i),"native"),
                    width = 1.5*sw,
-                   height = 1.5*sh , gp=gpar(fill="white", col="gray"))
-          grid.text( st , 0, sqrt(i), default.units="native")
+                   height = 1.5*sh , gp=grid::gpar(fill="white", col="gray"))
+          grid::grid.text( st , 0, sqrt(i), default.units="native")
 
         }
       }
@@ -120,6 +120,6 @@ spie <- function(p1, p2, init.angle=pi, multi, col = rainbow(length(x$radii)), b
 
   }
 
-  upViewport(2)
+  grid::upViewport(2)
 
 }

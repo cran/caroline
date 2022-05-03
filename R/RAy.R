@@ -53,7 +53,7 @@ raPlot <- function(a, b=NULL, uniques=5, normalize=FALSE,
   if(as.numeric(jitter)){ 
     if(jitter > .5 | jitter < 0)
       warning('jitter amount (in this context) is best set between 0 and .5') 
-    if(!is.null(jit.wgts) & class(jit.wgts) == 'data.frame'){
+    if(!is.null(jit.wgts) & is.data.frame(jit.wgts)){
       a[!a0] <- wjitter(a[!a0], jit.wgts[!a0,1], amount=jitter)
       b[!b0] <- wjitter(b[!b0], jit.wgts[!b0,2], amount=jitter)
     }else{

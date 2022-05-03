@@ -1,1 +1,9 @@
 exportPattern("^[^\\.]")
+importFrom("methods", "as")
+importFrom("grDevices", "boxplot.stats", "colors", "dev.off", "png","rainbow")
+importFrom("utils", "browseURL", "count.fields", "head", "read.delim","write.table","install.packages")
+importFrom("stats", "median", "pbinom", "qbinom", "qnorm", "quantile","runif", "sd", "shapiro.test", "var")
+importFrom("graphics", "axis", "box", "identify", "image", "lines","locator", "mtext", "par", "plot", "plot.new", "plot.window","points", "polygon", "rect", "segments", "text", "title")
+
+
+

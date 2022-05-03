@@ -34,7 +34,7 @@
 
 
 bestBy <- function(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE){
-  if(class(best) != 'character')
+  if(!is.character(best))
     stop('best column name must be of class caracter')
    
   if(!best %in% clmns){
@@ -50,7 +50,7 @@ bestBy <- function(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE){
     out <- .rowlist2df(lapply(gb, function(g)   g[order(g[,best], decreasing=inverse)[1],]))
     out <- out[order(out[,best], decreasing=inverse),clmns]			
   }else{
-    require(RSQLite)
+    requireNamespace("RSQLite")
     
     dots.in.names <- any(grepl('\\.', names(df)))
     if(dots.in.names){
@@ -62,14 +62,14 @@ bestBy <- function(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE){
     }
     
     tmpfile <- tempfile() 
-    con <- dbConnect(dbDriver("SQLite"), dbname = tmpfile)
-    dbWriteTable(con, 'tab', df)
+    con <- RSQLite::dbConnect(RSQLite::dbDriver("SQLite"), dbname = tmpfile)
+    RSQLite::dbWriteTable(con, 'tab', df)
     sql <- paste("SELECT * FROM tab AS tab1 WHERE tab1.oid IN 
                                    (SELECT tab2.oid FROM tab AS tab2
          				WHERE tab1.",by," = tab2.",by,"
          				ORDER BY tab2.", best," ", c('ASC','DESC')[inverse+1],"
      				LIMIT 1)", sep='')
-    out <- dbGetQuery(con, sql)
+    out <- RSQLite::dbGetQuery(con, sql)
     out <- out[order(out[,best], decreasing = inverse), clmns]
     
     ## convert underscores back to '.'s 
@@ -162,12 +162,12 @@ groupBy <- function(df, by, aggregation, clmns=names(df), collapse=',', distinct
         clmns <- gsub('\\.','_', clmns)
     }
     
-    require(RSQLite)
+    requireNamespace("RSQLite")
     tmpfile <- tempfile() 
-    con <- dbConnect(dbDriver("SQLite"), dbname = tmpfile)
+    con <- RSQLite::dbConnect(RSQLite::dbDriver("SQLite"), dbname = tmpfile)
     ## sort by 'by' column: important for ordering match to 'unique' row renaming below
     df <- df[order(df[,by]),]
-    dbWriteTable(con, 'tab', df)
+    RSQLite::dbWriteTable(con, 'tab', df)
     aggregation <- sub('mean','avg', aggregation)
     aggregation <- sub('length','count', aggregation)
     #aggregation <- sub('sd','stddev', aggregation)  #not yet supported by SQLite
@@ -191,7 +191,7 @@ groupBy <- function(df, by, aggregation, clmns=names(df), collapse=',', distinct
     select <- paste(by,"AS sortbyid,", select)
     
     sql <- paste("SELECT", select, "FROM tab GROUP BY", by)
-    out <- dbGetQuery(con, sql)
+    out <- RSQLite::dbGetQuery(con, sql)
     
     rownames(out) <- out$sortbyid
     out$sortbyid <- NULL
@@ -239,7 +239,7 @@ regroup <- function(df, old, new, clmns=names(df), funcs=rep('sum',length(clmns)
   
 addFactLevs <- function(x, new.levs=NA){
 
-  if(class(x) != 'data.frame')
+  if(!is.data.frame(x))
     stop('x must be a data.frame')
 
   isfacts <- sapply(x, is.factor)
@@ -252,10 +252,10 @@ addFactLevs <- function(x, new.levs=NA){
 
 sstable <- function(x, idx.clmns, ct.clmns=NULL, na.label='NA'){#,exclude=exclude, ...){
 
-  if(class(x) != 'data.frame')
+  if(!is.data.frame(x))
     stop('x must be a data.frame')
 
-  if(any(sapply(x[,idx.clmns], class)!= 'factor')){
+  if(any(sapply(x[,idx.clmns], function(z) !is.factor(z)))){# class)!= 'factor')){
     warning('some or all of your index columns are not factors. coercing them...')
     for(idx in idx.clmns)
       x[,idx] <- as.factor(x[,idx])
@@ -296,7 +296,7 @@ sstable <- function(x, idx.clmns, ct.clmns=NULL, na.label='NA'){#,exclude=exclud
 
     if(dim(tmp)[1]==2 & NROW(tab)==1 & ncc==2){
       colnames(tab) <- ct.clmns
-      rownames(tab) <- unique(y)
+      rownames(tab) <- levels(y) # was unique(y)
     }
     
   }
@@ -383,7 +383,7 @@ leghead <- function(x, n=7, tabulate=FALSE, colors=TRUE, na.name='NA',na.col='wh
 .vle2df <- function(vl,i){
   ## vector list element to dataframe (preserves list element names)
 
-  if(class(vl[[i]])=='data.frame'){
+  if(is.data.frame(vl[[i]])){
     df <- vl[[i]]
     names(df) <- paste(names(df),'.',i,sep='')    
   }else{
@@ -399,7 +399,7 @@ leghead <- function(x, n=7, tabulate=FALSE, colors=TRUE, na.name='NA',na.col='wh
 nerge <- function(l, ...){
   ## named data.frame or vector merge
 
-  if(!all(sapply(l, function(k) class(k) == 'data.frame' | is.vector(k) | is.factor(k))))
+  if(!all(sapply(l, function(k) is.data.frame(k) | is.vector(k) | is.factor(k))))
      stop('list elements must be either of class data.frame or of type vector (or factor)')
   if(length(l) < 2)
     stop('list l must have at least 2 elements')
