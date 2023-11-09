@@ -1,5 +1,5 @@
-dafafde78145beeafc3171e2efbb7a7d *DESCRIPTION
-8d23e33df40f613a4545fe4cfbe4e1cb *NAMESPACE
+ab46bfcba87b1ddbe1c0d503d6e54fd3 *DESCRIPTION
+ae24c6c0fd9dffc509da37fe2722a184 *NAMESPACE
 36d2e222676c4a032a58e8da1f5b7545 *R/RAy.R
 45ec4b89cde88bfdcc0a2619e0759566 *R/aggregate.R
 bed22b3c92aa1999a797cc44fcf12af8 *R/convert.R
@@ -10,6 +10,7 @@ d3691085586ab12874ce02d1388f4a76 *R/install.prev.pkg.r
 00d2557f2442f7d92a483f139361cc7b *R/math.R
 f14d6db8e5570f9cca0aa7677b7258c2 *R/parallel.R
 a33a612473a51ba446b13a91daa37c31 *R/plots.R
+5bafd3c90fea512e05d4707cc80ee69b *R/sparge.R
 c1225187061ebd106b2d7fe2cd154e36 *R/spie.R
 a57fe430326817a9b5b150a01d503cc3 *R/string.R
 c66638fa7cc5638ab340f63dec88fb51 *R/test.R
@@ -33,11 +34,12 @@ bd337b6f0e75dfb1f4393fe2274a8315 *man/mvlabs.Rd
 44a5442e185d0d8c70e7a6dd9e942e80 *man/parseArgStrings.Rd
 64dfc85b64890b7e994b74017ff99743 *man/pct.Rd
 ae5ec9c9e7bc61487cd81291e3259919 *man/pies.Rd
+12097594c01bf2bcc64928375522b398 *man/plot.sparge.Rd
 a6179b594df0fb1a064719b0fb103476 *man/plotClock.Rd
 92b758522857fe99d71164352109c2d4 *man/raAddArms.Rd
 52a0dfcadcab37ace276e4200124e808 *man/raAddAxLabs.Rd
 b7d8d59215325c1cdf41119c08d094a0 *man/raAddSigLines.Rd
-98a66fe0ea1abd27e23dc59d8c0a8131 *man/raPlot.Rd
+ac5f52f4083127f11cfdad83044ea7f1 *man/raPlot.Rd
 f26f85828610fda49e1243960e170466 *man/read.tab.Rd
 f5aa4f1c00acc0191251340c9a654d03 *man/regroup.Rd
 25a2ca1fdeed9b433fd9c80e7cb32d44 *man/rerowname.Rd

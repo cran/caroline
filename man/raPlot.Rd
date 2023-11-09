@@ -35,7 +35,7 @@ raPlot(a, b=NULL, uniques=5, normalize=FALSE,
 a RAy plot
 }
 \seealso{
- \link[limma]{plotMA}, link[edgeR]{maPlot}
+ limma::plotMA, edgeR::maPlot
 }
 \examples{
 
