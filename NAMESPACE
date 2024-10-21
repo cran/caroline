@@ -1,12 +1,15 @@
 exportPattern("^[^\\.]")
 importFrom("methods", "as")
-importFrom("grDevices", "boxplot.stats", "colors", "dev.off", "png","rainbow")
+importFrom("grDevices", "boxplot.stats", "colors", "dev.off", "png","rainbow", "dev.cur", "gray")
 importFrom("utils", "browseURL", "count.fields", "head", "read.delim","write.table","install.packages")
-importFrom("stats", "runif","qnorm")
-importFrom("graphics", "axis", "box", "identify", "image", "lines","locator", "mtext", "par", "plot", "plot.new", "plot.window","points", "polygon", "rect", "segments", "text", "title")
+importFrom("stats", "runif","qnorm","as.formula","pgeom","weighted.mean","coefficients","lm","quantile")
+importFrom("graphics", "axis", "box", "identify", "image", "lines","locator", "mtext", "par", "plot", "plot.new", "plot.window","points", "polygon", "rect", "segments", "text", "title","legend")
 
 S3method(plot, sparge)
+S3method(plot, confound.grid)
+S3method(plot, xy.ab.p)
 
 importFrom("grDevices", "col2rgb", "rgb")
 importFrom("graphics", "abline", "boxplot")
+
 

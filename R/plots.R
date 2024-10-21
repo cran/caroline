@@ -49,133 +49,6 @@ usr2lims <- function(adj=.04){
 
 
 
-
-### a better pie function with origin positions ###
-pies <- function(x, show.labels = FALSE, show.slice.labels = FALSE, color.table = NULL, 
-		radii = rep(2,length(x)), x0=NULL, y0=NULL, 
-		edges = 200,  clockwise = FALSE, 
-                init.angle = if (clockwise) 90 else 0, density = NULL, angle = 45, 
-                border = NULL, lty = NULL,  
-                other.color='gray', na.color='white', ...) 
-{
-  
-  if(!par()$new){
-    plot(x0, y0, pch='', ...)
-    par(new=TRUE)
-  }
-  if(!is.list(x)) # class() !='list')
-    stop("x must be a list")
-  
-  if(length(x) != length(x0) | length(x0) != length(y0))
-    stop(paste("x0 and y0 lengths (",length(x0),',',length(y0),") must match length of x (",length(x),")", sep=''))
-  
-  if(length(radii) < length(x))
-    radii <- rep(radii, length.out=length(x))
-  
-  ## calculate the char size to pie radius conversions
-  cx <- .25 * par('cxy')[1]
-  cy <- .19 * par('cxy')[2]
-  # old -> * (par('csi')/par('pin')[2]) * diff(ylim) * .2 # inches to coords scaling
-  
-  radii <- radii  
-  xlim <- usr2lims()$x
-  ylim <- usr2lims()$y
-  y2x.asp <- diff(xlim)/diff(ylim)
-
-  pie.labels <- names(x)
-
-  if (is.null(color.table)) {
-    unique.labels <- unique(unlist(lapply(x,names)))
-    color.table <- rainbow(length(unique.labels))
-    names(color.table) <- unique.labels
-  }
-  
-  ## loop through the list of pie tables
-  for(j in seq(along=x)){
-    X <- x[[j]]
-    data.labels <- names(X)
-
-    if(j != 1)
-      par(new=TRUE)
-    if (!is.numeric(X) || any(is.na(X) | X < 0)) 
-        stop("'x' values must be non-missing positive.")
-
-
-    if(length(X) == 0){
-      warning(paste(names(x)[[j]], 'has zero length vector'))
-
-    }else{
-      
-      ## generate a slice fraction vector
-      X <- c(0, cumsum(X)/sum(X))
-      names(X) <- data.labels  #re-label it
-      
-      dx <- diff(X)
-      nx <- length(dx)
-      plot.new()
-      pin <- par("pin")
-      if(all(xlim == c(-1, 1)) && all(ylim == c(-1,1))){
-        if (pin[1] > pin[2]) 
-          xlim <- (pin[1]/pin[2]) * xlim
-        else ylim <- (pin[2]/pin[1]) * ylim
-      }
-      
-      plot.window(xlim, ylim, "") #, asp = 1)
-
-      ## change to gray all of the X names without colors in the color table
-      nolgnd <- names(X)[!names(X) %in% names(color.table) ]
-      color.table <- c(color.table, nv(rep(other.color,length(nolgnd)),nolgnd))
-      col <- color.table[names(X)]
-      col[names(col)=='NA'] <- na.color 
-
-      if(length(border)> 1){
-        if(length(border) != length(x))
-          stop('length of border doesnt equal length of x')
-        this.brdr <- border[j]
-      }else{
-        this.brdr <- border
-      }
-      
-      lty <- rep(lty, length.out = nx)
-      angle <- rep(angle, length.out = nx)
-      density <- rep(density, length.out = nx)
-      twopi <- if (clockwise) 
-        -2 * pi
-      else 2 * pi
-      ## function to turn theta into xy coordinates
-      t2xy <- function(t) {
-        t2p <- twopi * t + init.angle * pi/180
-        list(x = radii[j] *cx * cos(t2p), y =  radii[j] * cy * sin(t2p)) #y
-      }
-      
-      ## loop through each slice of the pie
-      for (i in 1:nx) {
-        lab <- as.character(names(X)[i])
-        nx <- as.character(names(X)[i])
-        n <- max(2, floor(edges * dx[i]))
-        P <- t2xy(seq.int(X[i], X[i + 1], length.out = n))
-        polygon(c(x0[j]+ P$x, x0[j]), c(y0[j] +P$y, y0[j]), density = density[i], angle = angle[i], 
-                border = this.brdr, col = col[lab], lty = lty[i], ...)
-        P <- t2xy(mean(X[i + 0:1]))
-        
-        if (!is.na(lab) && nzchar(lab)) {
-          if(show.slice.labels){
-            lines(x0[j] +c(1, 1.05) * P$x, y0[j] +c(1, 1.05) * P$y)
-            text(x0[j] +1.1 * P$x, y0[j] + 1.1 * P$y, lab, xpd = TRUE, 
-                 adj = ifelse(P$x < 0, 1, 0))
-          }
-        }
-      }
-      if(show.labels)
-        text(x0[j],y0[j] + radii[j]+.2, pie.labels[j])
-      
-      invisible(NULL)
-    }    
-  }
-}
-
-
-
 #annulus()  #donut or ring plot
 
 
@@ -248,216 +121,6 @@ labsegs <- function(x0, y0, x1, y1, buf=.3, ...){
   segments(x0,y0,x1,y1,...)
 }
 
-  
-hyperplot <- function(x, y=NULL, annout=1:length(x), name='hyperplot.imagemap', w=72*8, h=72*6, link='internal', browse=TRUE, cex=1, ...){
- 
-  ## generate output paths
-  img.path <- paste(name,'.png',sep='')
-  html.path <- paste(name,'.html',sep='')
-
-  ## create image
-  png(img.path, width=w, height=h)
-
-  if(is.data.frame(x)) #class(x)=='data.frame')
-    stop('for data.frame input: x and y vectors should be in the annout table with x & y used to specify column names')
-    	
-  ## plot
-  if(is.null(y)){  
-    # x as an object with a native 'plot' method and xyc return data.frame
-    xyc <- plot(x, ...)
-    if(ncol(xyc)<2 | ncol(xyc)>3)
-      stop('plot(x) must return a rownamed dataframe or matrix of 2 or 3 columns: x,y and optionally cex (in that order)')
-    x <- xyc[,1]
-    y <- xyc[,2]
-    if(ncol(xyc)==3)
-      cex <- xyc[,3]
-    else
-      cex <- 1
-    idx <- rownames(xyc)
-  }else{          
-
-    if(all(is.character(c(x,y))) & all(sapply(list(x,y), length)==1)){ 
-      # x and y as column names
-      if(all(c(x,y)%in% names(annout)))
-        idx <- rownames(annout)
-      else
-        stop('x and y must exist in annout')
-      
-      x <- annout[,x]
-      y <- annout[,y]
-      idx <- rownames(annout)
-    }else{    
-      # x and y as named numeric vectors and annout as index to x (and y)
-
-      if(is.data.frame(annout) | is.matrix(annout)){
-        annout.idx  <- row.names(annout)
-      }else{ # is.vector
-        annout.idx <- annout  
-        link='none'
-      }
-      
-      if(is.null(names(x))){ # annout as a character vector or named dataframe
-        if(is.numeric(annout.idx)){
-          idx <- as.character(1:length(x))  # annout index is converted below in df check
-        }else{
-          if(length(annout.idx) == length(x))
-            idx <- annout.idx 
-          else
-            stop("length of name index supplied form annout must be same as length as x")
-        }    
-      }else{  # annout as index into names of x
-        idx <- names(x)
-        if(is.numeric(annout.idx))
-          annout <- names(x)[annout.idx]
-      }
-    }
-    
-    if(!is.numeric(x) | !is.numeric(y) | length(x) != length(y))
-      stop('x and y must be numeric vectors of equal length')
-    
-    plot(x, y, ...)
-
-  }
-   
-  ## build x, y coordinates, names & point sizes 
-  map <- data.frame(idx=idx, x=x, y=y, cex=cex, row.names=idx)
-  
-  ## grab figure & plot dimentions
-  mai <- par('mai')*72 #margins
-  pin <- par('pin')*72 #plot dim
-  usr <- par('usr')
-  
-  usr.xd <-diff(usr[1:2])
-  usr.yd <-diff(usr[3:4])
-
-  pin.xd <-pin[1]
-  pin.yd <-pin[2]
-
-  ## save image
-  dev.off()
-  
-  ## determine outlier points to annotate
-  if(is.data.frame(annout))
-    annout$nm <- rownames(annout)
-  else
-    annout <- data.frame(nm=as.character(annout))
-
-  if(length(link) != 1 | !is.character(link))
-    stop("'link' must be a character string specifying if points are linked 'internal'ly \
-           or which column of annot to use as external hyperlinks")
-
-  if(!link %in% c('none','internal',colnames(annout)))
-    stop("'link' must be either 'none', 'internal' or a column name of annout")
-  
-  if('out' %in% names(annout))
-    annout <- annout[annout$out, ]
-
-  ## subset coords by only the desired outlier list  
-  map <- subset(map, idx %in% annout$nm)
-  
-  if(nrow(map) < 1)
-    stop('no points to map because none of the annotations matched?')
-  
-  if(link == 'none')
-    map$href <- ''
-  else    
-    if(link == 'internal')
-      map$href <- paste('#',sub(' ','_',map$idx), sep='')
-    else
-      map <- nerge(list(map=map, href=nv(as.character(annout[,link]), annout$nm)))
-
-  for(clmn in names(annout)[sapply(annout, is.character)])
-    if(substr(annout[1,clmn],1,4) %in% c('http','www.'))
-      annout[,clmn] <- paste("<a target='_blank' href='",annout[,clmn],"'>",annout[,clmn],"</a>",sep='')
-  
-  ## translate user coordinate space into image output coordinates
-  map$x <-  (map$x - usr[1])/usr.xd * pin.xd + mai[2]
-  map$y <- (-map$y + usr[4])/usr.yd * pin.yd + mai[3]
-  map$r <- map$cex * 3
-
-  ## write HTML map
-  sink(html.path)
-
-  cat('<html>\n')
-  cat(paste('<img src="',img.path,'" width="',w,'" height="',h,'" usemap="#',name,'"/>', sep=''),'\n')
-  cat(paste('<map name="',name,'">',sep=''))    
-  with(map, cat(paste('<area shape="circle" coords="',x,',',y,',',r,'" href="',href,'" title="',idx,'"/>\n',sep='')),'\n')
-  cat('</map>')
-
-  if(link == 'internal' & is.data.frame(annout)){ #class(annout)=='data.frame'){
-    cat('<br><h5>Annotations</h5>')
-    cat('<table border=1>','\n')
-    cat(paste('<tr><th></th>', paste('<th>', names(annout),'</th>',collapse=''), '</tr>\n'))
-    for(i in 1:nrow(annout))
-      cat(paste('<tr><td><a name="',sub(' ','_',annout$nm[i]),'"></a></td>',
-                paste('<td>',annout[i,],'</td>',collapse=''), '</tr>\n',sep=''))
-    cat('</table>','\n')
-  }
-  cat('</html>')
-  cat(rep('<br>',60)) ## so hyperlink jumps don't run into the bottom of the browser window')
-  sink()
-
-  ## open browser 
-  if(browse)
-    browseURL(html.path)
-}
-
-
-
-.rect3venn <- function(xt){
-
-    lim <- max(xt)
-    nms <- names(dimnames(xt))
-
-    t0 <- xt[1,1,1]
-    t1 <- xt[2,1,1]
-    t2 <- xt[1,2,1]
-    t3 <- xt[1,1,2]
-    t12 <- xt[2,2,1]
-    t23 <- xt[1,2,2]
-    t13 <- xt[2,1,2]
-    t123 <- xt[2,2,2]
-
-    s123 <- sqrt(t123)
-    s12 <- (t12-t123)/s123
-    s23 <- (t23-t123)/s123
-    s13 <- (t13-t123)/s123
-
-    s1 <- t1/(s13+s123+s12)
-    s2 <- t2/(s123+s23)
-    s3 <- t3/(s123+s23)
-
-    s2 <- sqrt(t2)
-    #s3 <- sqrt(t3)
-
-    plot.new()
-    plot.window(c(-lim,lim),c(-lim,lim),xaxs="i",yaxs="i")
-
-    #par(cex=0.9)
-
-    rect(-s13    ,0        ,s123+s12,s1  , col="pink")
-    #rect(0       ,-s23     ,s2     ,s123, col="springgreen")
-    rect(0       ,-s2+s123 ,s2      ,s123, col="springgreen")
-    rect(s123-s3 ,-s23     ,s123    ,s123, col="lightblue")
-    #rect(-s3+s123,-s3+s123 ,s123    ,s123, col="lightblue")
-
-    rect(s123,0   ,s123+s12,s123, col="yellow")
-    rect(-s13,0   ,0       ,s123, col="violet")
-    rect(0   ,-s23,s123    ,0   , col="cyan")
-
-    rect(0   ,0   ,s123    ,s123,col="white")
-
-    text(s123/2           ,s123/2, t123    )
-    text(-s23/2           ,s123/2, t13-t123)
-    text(s123+(s12/2)     ,s123/2, t12-t123)
-    text(s123/2           ,-s23/2, t23-t123)
-
-    text((-s13+s123+s12)/2,s1-3      ,paste(nms[1],"n=",t1))
-
-    text(s2/2             ,-s2+s123+3,paste(nms[2],"n=",t1))
-
-    text(-(s3-s123)/2     ,-s23+3    ,paste(nms[3],"n=",t3))
-}
 
 heatmatrix <- function(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','right'), xadj=.02, yadj=.3, ylab.cntr=FALSE, cex=1, cex.axis=1, ...){
 
@@ -480,5 +143,69 @@ heatmatrix <- function(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','righ
   if(values)
      text(col(x),row(x), round(x[nrow(x):1,],2), cex=cex)
 
+}
+
+
+## function modified from stackoverflow (via chan1142)
+legend.position <- function(x,y,xlim=NULL,ylim=NULL, start=.05, end=.5, incr=.01) {
+  if (dev.cur() > 1) {
+    p <- par('usr')
+    if (is.null(xlim)) xlim <- p[1:2];x1<-xlim[1];x2<-xlim[2]
+    if (is.null(ylim)) ylim <- p[3:4];y1<-ylim[1];y2<-ylim[2]
+  } else {
+    if (is.null(xlim)) xlim <- range(x, na.rm = TRUE)
+    if (is.null(ylim)) ylim <- range(y, na.rm = TRUE)
+  }
+  .sumup.points <- function(f) {
+     tl <- sum((x <= (x1+(x2-x1)*f)) & (y >= (y2-(y2-y1)*f)))
+     bl <- sum((x <= (x1+(x2-x1)*f)) & (y <= (y1+(y2-y1)*f)))
+     tr <- sum((x >= (x2-(x2-x1)*f)) & (y >= (y2-(y2-y1)*f)))
+     br <- sum((x >= (x2-(x2-x1)*f)) & (y <= (y1+(y2-y1)*f)))
+    c(topleft=tl,topright=tr,bottomleft=bl,bottomright=br)
+  }
+  A <- rep(0,4)
+  fractionations <- seq(start,0.5,by=incr)
+  for (f in fractionations) {
+     a <- .sumup.points(f)
+     A <- rbind(A,a); 
+    if (sum(a!=0)==4) break
+  }
+  corner.means <- apply(A, 2, function(x) weighted.mean(x,nrow(A):1));
+  colnames(A)[which.min(corner.means)][1]
+}
+
+
+# split plot to investigate confounding between modeled variables (inspired by lattice's multi-panel lattice graph)
+plot.confound.grid <- function(x,Y='y',X='x',confounder='z',breaks=3, mains='breaks', ...){
+ oldpar <- par(no.readonly=TRUE);
+ par(mfrow=c(1,breaks))
+ on.exit(par(oldpar))
+
+ if(length(breaks)==1)
+  breaks   <- c(quantile(  x[,confounder], probs = seq(0, 1, by = 1/breaks),na.rm=TRUE))
+ ecs   <- split(x,cut(  x[,confounder], breaks=breaks));
+
+ ellipsis <- ellipsis.defaults(x=list(...), nl=list(ylab=Y,xlab=X))
+
+ if(mains=='breaks')
+  mains <- paste(confounder, as.character(names(ecs)))
+ if(length(mains)!=length(ecs)){
+  warning('mains must be a vector of plot titles equal to the breaks')
+  mains <- rep(mains,length(ecs))
+ }
+ for(i in 1:length(ecs)){ 
+  #with(ecs[[i]], plot(get(X),get(Y),  opt.args)))  
+  do.call(plot, c(list(x=ecs[[i]][,X],y=ecs[[i]][,Y], main=mains[i]),  ellipsis)) 
+  with(ecs[[i]],abline(lm(get(Y)~get(X))))
+ }
+}
+
+ellipsis.defaults <- function(x, nl){
+  for(i in seq(along.with=nl)){
+    if(is.na(match(names(nl)[i], table=names(x)))){ 
+        x <-  c(unlist(x), nl[i])
+   }
+ }
+ return(x)
 }
 
