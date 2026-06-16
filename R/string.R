@@ -35,7 +35,10 @@ m <- function(pattern, vect, names="V", types="character", mismatch=NA, ...){
       }
       return(ret)
     }else{
-      return(as.data.frame(ret, stringsAsFactors=FALSE))
+      ret.df <- as.data.frame(ret, stringsAsFactors=FALSE)
+      if(length(names)!=length(ret.df)) stop('length of names does not equal number of columns of the generated dataframe')
+      names(ret.df) <- names
+      return(ret.df)
     }
   }
 }

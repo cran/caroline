@@ -9,15 +9,15 @@ Visually compare continuuous univariate distributions using jittered and [progre
 \usage{
 \method{plot}{sparge}(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x), 
            cpd=0, cpw=.4, jit.f=1, horiz=TRUE, add=FALSE, lgnd='auto', zl=FALSE,  
-                                        col=1, box.brdrs='gray',alpha=.3, ...)
+                             col=1, box.brdrs='gray',alpha=.3, wiskers=1.5, ...)
  }
 \arguments{
 \item{x}{a list of numeric vectors OR a dataframe with both numeric and factor columns}
 \item{f}{either a factor [that is same length as a numeric 'x'] OR a model formula}
 \item{out.range}{range of all possible outcome variable values (recursive loop prespecification)}
 \item{cat.names}{level names of the primary categorical variable partitioning the distributions}
-\item{cpd}{position dodge: shifts all categorical plotting positions this factor}
-\item{cpw}{position width: width of the swath of jittered categorical positions}
+\item{cpd}{categorical position dodge: shifts all categorical plotting positions by this factor}
+\item{cpw}{categorical position width: width of the swath of jittered categorical positions}
 \item{jit.f}{factor for random jittering (see 'jitter()'}
 \item{horiz}{should rotate existing plot horizontally? (be sure to double check x & y labels match)}
 \item{add}{should we add to the existing plot?}
@@ -26,6 +26,7 @@ Visually compare continuuous univariate distributions using jittered and [progre
 \item{col}{(vector of) [base] colors of the points of the distribution(s)}
 \item{box.brdrs}{the color of the borders of the box plots surrounding all distributions}
 \item{alpha}{transparency level for [overlapping] points}
+\item{wiskers}{whiskers multiplier == X interquartile range. See default of boxplot(range=1.5).}
 \item{...}{other parameters passed on to plot}
 }
 \details{

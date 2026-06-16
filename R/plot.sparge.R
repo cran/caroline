@@ -1,4 +1,4 @@
-plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x), cpd=0, cpw=.4, jit.f=1, horiz=TRUE, add=FALSE, lgnd='auto', zl=FALSE,  col=1, box.brdrs='gray',alpha=.3, ...){
+plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x), cpd=0, cpw=.4, jit.f=1, horiz=TRUE, add=FALSE, lgnd='auto', zl=FALSE,  col=1, box.brdrs='gray',alpha=.3, wiskers=1.5,...){
 
    ## INPUT AS FORMULA & DATA ###########################
    if( is.character(f) & is.data.frame(x) ){
@@ -13,7 +13,7 @@ plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x
        # qualifies for "input as vectors" #
       }else{
        if(length(formula.predictors) != 2)
-        {stop("something is wrong with your formula: too many terms?")}
+        {stop("only two predictor terms currently allowed in formula 'f'")}
        out <- formula.parts[2]; # outcome variable
        fp1 <- formula.predictors[1] ; # main predictor
        fp2 <- formula.predictors[2] ; # control factor
@@ -23,15 +23,18 @@ plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x
         x[,fp1] <- as.factor(x[,fp1])
         fp1.levs <- levels(x[,fp1])
        if(!is.factor(x[,fp2]))
-        {stop("term after '|' must be a factor")}
+        {message("term after '|' must be a factor, coercing")}
+       x[,fp2] <- as.factor(x[,fp2])
        fp2.levs <- levels(x[,fp2])
        fp2.l.ct <- length(fp2.levs)
        if(fp2.l.ct  > 6)
-        {stop("too many levels in factor fp2")}
-       if(length(col)==fp2.l.ct)
+        {warning("too many levels in second predictor factor: [fp2] levels ideally fewer than 5")}
+       if(length(col)==fp2.l.ct){
+         if(is.null(names(col))) stop("'col' must be a named vector & match factor levels: try 'nv()'")
          lev.cols <- col
-       else
+       }else{
          lev.cols <- nv(rainbow(fp2.l.ct), fp2.levs)
+       }
        pds <- nv(seq(-.1*fp2.l.ct/2, .1*fp2.l.ct/2, along.with=fp2.levs), fp2.levs)
        news <- nv(c(F,rep(T, fp2.l.ct -1)), fp2.levs)
        #axts <- nv(c('s',rep('n', fp2.l.ct -1)), fp2.levs)
@@ -42,7 +45,7 @@ plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x
           # RECURISVE CALL TO PLOT.SPARGE
           plot.sparge(x.list, out.range=range(x[,out]),  cat.names=fp1.levs,
                       col = lev.cols[fp2lev], cpd=pds[fp2lev], add=news[fp2lev], cpw=cpw/fp2.l.ct, #xaxt=axts[fp2lev], axt=axts[fp2lev],
-                                                             horiz=horiz, zl=zl, jit.f=jit.f, box.brdrs=box.brdrs, alpha=alpha, ...)
+                                                             horiz=horiz, zl=zl, jit.f=jit.f, box.brdrs=box.brdrs, alpha=alpha, range=wiskers, ...)
        }
        if(lgnd=='auto'){
         if( horiz){low.dense.lgnd.pos <- legend.position( x[,out], as.numeric(x[,fp1]) )}
@@ -86,20 +89,23 @@ plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x
    pred.pos.range <- c(min(pred.levels)-abs(cpw), max(pred.levels)+abs(cpw))
    pred.positions <- lapply(1:q, function(pp) jitter(rep(pp,length(x[[pp]])), factor=jit.f, amount=cpw/2) + cpd)
 
+   cat.axis.range.spreader <- .4
+   pred.pos.range <- pred.pos.range + (c(-1,1) * cat.axis.range.spreader)  # plot-edges catgory-group buffer (may also use: par(bty='n', xpd=T))
+
    xxt <- yxt <- 's'  
    
    unlist(pred.positions)
    if(horiz==TRUE){
      xs <- unlist(x)
      ys <- unlist(pred.positions)
-     xlim <- out.range
+     xlim <- (out.range)
      ylim <- pred.pos.range
      cat.axis.label.side <- 2
      yxt='n'
    }else{
-     xs <- unlist(pred.positions) # switch which is 'xs' and which is 'ys'
-     ys <- unlist(x)
-     xlim <- pred.pos.range
+     xs <- unlist(pred.positions) # switch which is 'xs' and which is 'ys' 
+     ys <- unlist(x) 
+     xlim <- pred.pos.range 
      ylim <- out.range
      cat.axis.label.side <- 1
      xxt <- 'n'
@@ -107,12 +113,11 @@ plot.sparge <- function(x, f=NULL, out.range=range(unlist(x)), cat.names=names(x
    par(new=add)
    plot(xs, ys, ylim=ylim, xlim=xlim, xaxt=xxt, yaxt=yxt, pch=21, bg=cols, ...) 
    axis(side=cat.axis.label.side, at=pred.levels, labels=cat.names)
-
-print(pgeom(length(xs)/3, prob=.03) -.1)
    gray.scale <- gray(pgeom(length(xs), prob=.02) -.1)
    if(!is.null(box.brdrs)){
-    if(box.brdrs=='gray'){ bc = gray.scale }else{ bc=box.brdrs}
-     boxplot(x, at=1:q+cpd, range=0, yaxt='n', xaxt='n', horizontal=horiz, col='transparent', varwidth=T, las=1, add=TRUE, border=bc, boxwex=cpw)
+    if(box.brdrs=='gray'){ bc = gray.scale }else{ bc=box.brdrs}  
+     # future addition: check here for user ylim + xlim passed in as params so they may trump the auto-provided ones above?
+     boxplot(x, at=1:q+cpd, yaxt='n', xaxt='n', horizontal=horiz, col='transparent', varwidth=T, las=1, add=TRUE, border=bc, boxwex=cpw, range=wiskers, outline=TRUE)
    }
   if(zl){abline(v=0, lty=2)}  
  } # end list-only input option 

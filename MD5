@@ -1,4 +1,4 @@
-2a8c25a858f976f26df84393969e6f35 *DESCRIPTION
+50b8e4266d63d1d62dd304aee3fae40f *DESCRIPTION
 bb9a3e8382b5dc33d66c4986346925b0 *NAMESPACE
 45ec4b89cde88bfdcc0a2619e0759566 *R/aggregate.R
 bed22b3c92aa1999a797cc44fcf12af8 *R/convert.R
@@ -12,12 +12,12 @@ f14d6db8e5570f9cca0aa7677b7258c2 *R/parallel.R
 36d2e222676c4a032a58e8da1f5b7545 *R/plot.RAy.R
 8c841313481c294ab0e34be5751345b1 *R/plot.hyperplot.R
 87ea6dcac9a148ad0f9dc09b9721858c *R/plot.pies.R
-710b9e5ecb0d5b3330ba016e17e27a17 *R/plot.sparge.R
+ffb533ae376641d5053be1eee2ee1bd5 *R/plot.sparge.R
 c1225187061ebd106b2d7fe2cd154e36 *R/plot.spie.R
 93f87fd33433b833495ea2848d6a6a3b *R/plot.xy.ap.p.R
 c1739ec278f21d1d3630f2d611a091e8 *R/plots.R
 cae0b205de92a1813d5ff4a4bc2c3cfc *R/reporting.R
-a57fe430326817a9b5b150a01d503cc3 *R/string.R
+81fbfa1f1dc65559130ad8a13f506e99 *R/string.R
 c66638fa7cc5638ab340f63dec88fb51 *R/test.R
 0b76a46a31c68509603953fe55227f5f *man/addFactLevs.Rd
 db414c72cb8742ddcc59e3fdfd94b74f *man/bestBy.Rd
@@ -43,7 +43,7 @@ bd337b6f0e75dfb1f4393fe2274a8315 *man/mvlabs.Rd
 64dfc85b64890b7e994b74017ff99743 *man/pct.Rd
 ae5ec9c9e7bc61487cd81291e3259919 *man/pies.Rd
 ec2c91b6aec2bbd9f117ea9136fc6ff5 *man/plot.confound.grid.Rd
-97cf2232025853baf6bc2338917f196f *man/plot.sparge.Rd
+6d4dd38c0e1fcaed3640d5912331c96b *man/plot.sparge.Rd
 a141f2b815cf1dcb57899c1bcea3b860 *man/plot.xy.ab.p.Rd
 a6179b594df0fb1a064719b0fb103476 *man/plotClock.Rd
 92b758522857fe99d71164352109c2d4 *man/raAddArms.Rd
