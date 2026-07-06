@@ -33,10 +33,10 @@
  do.call(rbind.data.frame, x)
 
 
-bestBy <- function(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE){
+bestBy <- function(df, by, best, top=1, clmns=names(df), rebind=TRUE, inverse=FALSE, sql=FALSE){
   if(!is.character(best))
     stop('best column name must be of class caracter')
-   
+  if(top>1 & sql) stop("this hasn't be implemented yet, best to use top=1 for now with SQL")
   if(!best %in% clmns){
     warning("'best' not included in 'clmns', adding it for you")
     clmns <- c(clmns, best)
@@ -47,8 +47,11 @@ bestBy <- function(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE){
   
   if(!sql){    
     gb <- groupBy(df, by, clmns=clmns, aggregation=NULL)
-    out <- .rowlist2df(lapply(gb, function(g)   g[order(g[,best], decreasing=inverse)[1],]))
-    out <- out[order(out[,best], decreasing=inverse),clmns]			
+    out <- lapply(gb, function(g)   g[order(g[,best], decreasing=inverse)[1:top],])
+    if(rebind){
+        out <- .rowlist2df(out)
+        out <- out[order(out[,best], decreasing=inverse),clmns]			
+    }
   }else{
     requireNamespace("RSQLite")
     
@@ -68,7 +71,7 @@ bestBy <- function(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE){
                                    (SELECT tab2.oid FROM tab AS tab2
          				WHERE tab1.",by," = tab2.",by,"
          				ORDER BY tab2.", best," ", c('ASC','DESC')[inverse+1],"
-     				LIMIT 1)", sep='')
+     				LIMIT ", top, ")", sep='')
     out <- RSQLite::dbGetQuery(con, sql)
     out <- out[order(out[,best], decreasing = inverse), clmns]
     
@@ -375,55 +378,6 @@ leghead <- function(x, n=7, tabulate=FALSE, colors=TRUE, na.name='NA',na.col='wh
       x <- x[c(rownames(x)[!isna], na.name),]
   }
   x
-}
-
-
-
-
-.vle2df <- function(vl,i){
-  ## vector list element to dataframe (preserves list element names)
-
-  if(is.data.frame(vl[[i]])){
-    df <- vl[[i]]
-    names(df) <- paste(names(df),'.',i,sep='')    
-  }else{
-    df <- as.data.frame(vl[[i]])
-    colnames(df) <- i
-    rownames(df) <- names(vl[[i]])
-  }
-  df$rownames <- rownames(df)  #necessary because the built in b='row.names' merge is really slow (if not completely broken)
-  df
-}
-
-
-nerge <- function(l, ...){
-  ## named data.frame or vector merge
-
-  if(!all(sapply(l, function(k) is.data.frame(k) | is.vector(k) | is.factor(k))))
-     stop('list elements must be either of class data.frame or of type vector (or factor)')
-  if(length(l) < 2)
-    stop('list l must have at least 2 elements')
-  if(is.null(names(l))){
-    warning("each merge element in the list 'l' should have a name. making some up.")
-    names(l) <- letters[1:length(l)]
-  }
-  if(!all(sapply(l, function(j) !is.null(rownames(j)) | !is.null(names(j)))))
-    stop('all list elements must have named components (dataframes must have row names)')
-    
-  df <- .vle2df(l,names(l)[1])
-  for(e in 2:length(l)){
-    df <- merge(df, .vle2df(l, names(l)[e]), by='rownames', ...)
-    rownames(df) <- df$rownames
-  }
-  df$rownames <- NULL
-
-
-  ## removing appended colnames if unnecessary
-  orig.names <- sub(paste('\\.(',paste(names(l),collapse='|'),')$',sep=''),'', names(df))
-  if(length(orig.names)== length(unique(orig.names)))
-    names(df) <- orig.names
-  
-  df
 }
 
 

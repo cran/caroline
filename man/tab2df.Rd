@@ -11,6 +11,9 @@ tab2df(x, ...)
 \item{x}{a table or matrix class object (output from the table command).}
 \item{...}{other arguments passed to data.frame(...).}
 }
+\details{
+[[consider using  check.names=F to underlying data.frame() function when converting the cross-tabulation out put from a factor produced by cut() and used by table() ]])
+}
 \seealso{
 table
 }

@@ -28,7 +28,7 @@ tab2df <- function(x,...){
     x <- as.list(x)
     names(x) <- clm.nms
   }
-  df <- data.frame(x,...)
+  df <- data.frame(x,...) #check.names=FALSE?
   rownames(df) <- row.nms
   return(df)
   
@@ -37,28 +37,56 @@ tab2df <- function(x,...){
 
 
 
-nv <- function(x, name){
+nv <- function(x=seq(along=name), name=letters[length(x)], key.clmn='id'){
 
   if(is.data.frame(x)){
-    v <- x[,name[1]]
-    if(length(name)==2)
+    if(NCOL(x)==2 && (key.clmn %in% names(x))){
+      message(paste(c("found key clmn '", key.clmn,"' in a two clmn (DB lookup?) table, using it to name the other clmn"), collapse=''))
+      data.clmn <- names(x)[!names(x) %in% key.clmn]
+      rownames(x) <- name <- x[,key.clmn] # rownames gets used to name the vector below
+    }else{
+      message(paste(c("using the first element of 'name' ('",name[1],"') to extract data from x"),collapse=''))
+      data.clmn <- name[1]
+    }
+    v <- x[,data.clmn]
+    if(length(name)==2){
       names(v) <- x[,name[2]]
-    else
+    }else{
       names(v) <- rownames(x)
+    }
   }else{
     if(NCOL(x)!=1)
-      stop('x must be unidimentional')
+      stop('x must be unidimentional (if not a dataframe)')
     v <- x
+    if(length(x) != length(name)) stop("'x' and 'name' must have the same length  for a unidimentional 'x'")
     names(v) <- name
   }
   v
 }
 
+nv2df <- function(x, clmn.names=c('x','name'), ...){
+   df <- data.frame(x=x, name=names(x), ...)
+   names(df) <- clmn.names 
+   df
+}
 
-pct <- function(df, clmns){
-   for(clmn in clmns)
-    df[,paste(clmn,'pct',sep='.')] <- df[,clmn]/sum(df[,clmn])
-  return(df) 
+
+pct <- function(x, clmns=NA, digits=2, suffix='%'){
+
+   if(is.data.frame(x)){
+    for(clmn in clmns)
+     x[,paste(clmn,'pct',sep='.')] <- x[,clmn]/sum(x[,clmn])
+   }else{
+     x.names <- NULL
+     x <- x/sum(x)
+     if(!is.numeric(digits)) stop('"digits" must be an integer specifying the number of decimal places for rounding')
+     if(!is.null(names(x))) x.names <- names(x)
+     x <- round(x, as.integer(digits))
+     if(suffix=='%')
+       x <- paste(x*100,suffix, sep='')
+     if(!is.null(x.names)) names(x) <- x.names 
+   }
+  return(x) 
 }
 
 rerowname <- function(df, old='NA', new ='unknown'){

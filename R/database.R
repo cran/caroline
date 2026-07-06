@@ -90,3 +90,87 @@ dbWriteTable2 <- function(con, table.name, df, fill.null = TRUE, add.id=TRUE, ro
   else
     return(db.write)
 }
+
+
+
+nerge <- function(l, method=c('rownames','lookup'), ...){ ## named data.frame or vector merge   #keep.row.clmn=FALSE, 
+  if(length(method)<3){
+    if(!all(method %in% c('rownames','lookup'))) stop("method options are 'rownames' or 'lookup'")
+    if(length(method)==2){ warning("method is either 'rownames' or 'lookup', setting to 'rownames' default")
+    method <- 'rownames'}
+  }
+  #if(any(sapply(names(l), function(ln) 'lookup' %in% ln))) stop('lookup is a special reserved word used in nerging')
+  if(!all(sapply(l, function(k) is.data.frame(k) | is.vector(k) | is.factor(k))))
+     stop('list elements must be either of class data.frame or of type vector (or factor)')
+  if(length(l) < 2)
+    stop('list l must have at least 2 elements')
+  if(is.null(names(l))){
+    warning("each merge element in the list 'l' should have a name. making some up.")
+    names(l) <- letters[1:length(l)]
+  }
+  if(method=='rownames'){
+  if(!all(sapply(l, function(j) !is.null(rownames(j)) | !is.null(names(j)))))
+    stop('all list elements must have named components (dataframes must have row names)')
+  }
+  if(all(sapply(l, is.data.frame)) && all(sapply(l, dim)[2,]==1)){
+    warning("all dataframes in 'l' have only one column, consider converting them to named vectors so that l's list names can be used for the merged df column names (eg, via l <- lapply(l, nv, 1))")
+  }
+
+  lookup.ids <- NULL
+  lookup.names <- m(names(l[[1]]), pattern='^([^\\.]+).id$')
+  if(method!='lookup'){  
+    if(any(!is.null(lookup.names)) & any(lookup.names %in% names(l))) 
+      warning('found a "<table>.id" in the column names of the first entity of "l", should we set method="lookup"?')
+  }else{# auto id lookup
+    if(!is.data.frame(l[[1]])) 
+      stop("1st element should be a DF w/ '<entity>.id' columns that simply (star DB topology) reference the other list entities with corresponding lookup names)")
+    #lookup.names <- m(names(l[[1]]), pattern='^([^\\.]+).id$')
+    lookup.names <- lookup.names[!is.na(lookup.names)]  #this really should be handled inside "match"
+    if(sum(!is.na(lookup.names) != length(l)-1)) 
+      stop("the number of lookup ids in the first list entity (a dataframe) should equal the length of the entity list minus one")
+    if(!all(names(l)[-1] %in% lookup.names))
+      warning(paste(c("there are names (", paste(names(l), collapse=','), ") that don't match the '.id' columns in df1 (",paste(lookup.names, collapse=','),")"), collapse=''))
+    lookup.names <- lookup.names[match(names(l), lookup.names, nomatch=F)] # re-odering   # IF NA's are removed -1 must be added to 'e' index counting below
+    lookup.ids <- nv(paste(lookup.names, '.id',sep=''), lookup.names)
+  }
+  df <- .vle2df(l, names(l)[1], mthd=method)
+  for(e in 2:length(l)){
+    if(method=='rownames'){
+      df <- merge(x=df, y=.vle2df(l, names(l)[e], mthd=method), by='rownames', ...) 
+      rownames(df) <- df$rownames
+    }else{
+      message(paste(c("Joining main dataframe onto '",names(l)[e] ,"' via '",lookup.ids[names(l)[e]],"'"), collapse=""))
+      df <- merge(x=df, y=.vle2df(l, names(l)[e], mthd=method), 
+                       by.x=lookup.ids[names(l)[e]], 
+                       by.y='lookup', ...)
+    }
+  }
+  df[,method] <-  NULL  
+  ## removing appended colnames if unnecessary
+  orig.names <- sub(paste('\\.(',paste(names(l),collapse='|'),')$',sep=''),'', names(df))
+  if(length(orig.names)== length(unique(orig.names)))
+    names(df) <- orig.names
+  df[, grep(names(df),pattern='(^lookup\\.|\\.id$)')] <- NULL
+  return(df)
+}
+
+
+.vle2df <- function(vl, vei, mthd='rownames'){ # helper function for nerge above
+  ## vector list element to dataframe (preserves list element names)
+
+  if(is.data.frame(vl[[vei]])){
+    df <- vl[[vei]]
+    if(mthd!='lookup'){
+       names(df) <- paste(names(df),'.',vei,sep='')}   
+  }else{
+    df <- as.data.frame(vl[[vei]])
+    colnames(df) <- vei
+    rownames(df) <- names(vl[[vei]])
+  }
+  df[,mthd] <- rownames(df) 
+  df
+}
+
+
+
+

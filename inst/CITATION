@@ -1,0 +1,14 @@
+bibentry(bibtype = "Article",
+  title        = "caroline: A Collection of Database, Data Structure, Visualization, and Utility Functions for R",
+  author       = c(person(given = "David",
+                          family = "Schruth")),
+  journal      = "Comprehensive R Archive Networkx`",
+  year         = "2026",
+  header       = "To cite caroline in publications use:",
+  textVersion  =
+  paste("David M. Schruth (2026).",
+        "caroline A Collection of Database, Data Structure, Visualization, and
+        Utility Functions for R.",
+        "Comprehensive R Archive Network",
+        "https://CRAN.R-project.org/package=caroline")
+)

@@ -6,7 +6,7 @@ This is a very simplified heatmap function: basically a convienent wrapper aroun
 }
 \usage{
 heatmatrix(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','right'), 
-                             xadj=.02, yadj=.3, ylab.cntr=FALSE, cex=1, cex.axis=1, ...)
+  xadj=.05, yadj=1, ylab.cntr=FALSE, cex=1, axis.cex=1, text.col=1, xlab='',ylab='',...)
 }
 \arguments{
 \item{x}{A matrix}
@@ -17,7 +17,10 @@ heatmatrix(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','right'),
 \item{yadj}{y-adjust of the column labels.}
 \item{ylab.cntr}{boolean for justification of row labels.}
 \item{cex,}{character expansion factor for values in cells if values == true}
-\item{cex.axis}{character expansion factor for axis tick mark labels}
+\item{axis.cex}{character expansion factor for axis tick mark labels}
+\item{text.col}{color of the text printed over the colored rectangle of all matrix cells}
+\item{xlab}{x axis label}
+\item{ylab}{y axis label} 
 \item{...}{other paramters passed on to image()}
 }
 \seealso{

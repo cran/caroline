@@ -122,32 +122,35 @@ labsegs <- function(x0, y0, x1, y1, buf=.3, ...){
 }
 
 
-heatmatrix <- function(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','right'), xadj=.02, yadj=.3, ylab.cntr=FALSE, cex=1, cex.axis=1, ...){
+heatmatrix <- function(x, values=TRUE, clp=c('bottom','top'), rlp=c('left','right'), xadj=.05, yadj=1, ylab.cntr=FALSE, cex=1, axis.cex=1,  text.col=1, xlab='', ylab='', ...){
 
-  image(1L:ncol(x), 1L:nrow(x), t(x[nrow(x):1,]),  xaxt='n', yaxt='n', ... )
+  image(x=1L:ncol(x), y=1L:nrow(x), t(x[nrow(x):1,]),  xaxt='n', yaxt='n', xlab=xlab, ylab=ylab, ...)
 
-  if(!is.null(rownames(x))){
+  if(!is.null(rownames(x))){  # y axis
     clp2par <- nv(c(1,2),clp)
     clp2xadj <- nv(c(-1,1),clp) * xadj
     clp2adj <- nv(c(1,0),clp); if(ylab.cntr){ clp2adj <- nv(rep(.5,2),clp)}
     clp <- match.arg(clp)
-    text(x=par("usr")[clp2par[clp]] +clp2xadj[clp], y=nrow(x):1, adj=clp2adj[clp], labels = rownames(x), xpd = TRUE, cex=cex.axis)
+    text(x=par("usr")[clp2par[clp]] +clp2xadj[clp], y=nrow(x):1, adj=clp2adj[clp], labels = rownames(x), xpd = TRUE, cex=axis.cex)
   }
-  if(!is.null(colnames(x))){
+  if(!is.null(colnames(x))){   # x axis
     rlp2par <- nv(c(3,4),rlp)
     rlp2yadj <- nv(c(-1,1),rlp) * yadj
     rlp <- match.arg(rlp)
     text(x=1:ncol(x), y=par("usr")[rlp2par[rlp]] + rlp2yadj[rlp], adj=.5,
-         labels = colnames(x), xpd = TRUE, cex=cex.axis)
+         labels = colnames(x), xpd = TRUE, cex=axis.cex)
   }
   if(values)
-     text(col(x),row(x), round(x[nrow(x):1,],2), cex=cex)
+     text(col(x),row(x), round(x[nrow(x):1,],2), cex=cex, col=text.col)
 
 }
 
 
 ## function modified from stackoverflow (via chan1142)
 legend.position <- function(x,y,xlim=NULL,ylim=NULL, start=.05, end=.5, incr=.01) {
+  df <- data.frame(x,y)
+  df <- subset(df, apply(df, 1, function(x) !any(is.na(x)))) # remove rows with any missing values
+  x <- df$x; y <- df$y
   if (dev.cur() > 1) {
     p <- par('usr')
     if (is.null(xlim)) xlim <- p[1:2];x1<-xlim[1];x2<-xlim[2]
@@ -200,7 +203,7 @@ plot.confound.grid <- function(x,Y='y',X='x',confounder='z',breaks=3, mains='bre
  }
 }
 
-ellipsis.defaults <- function(x, nl){
+ellipsis.defaults <- function(x, nl){     #  consolodate this function with .parse.params.pass.parts() in plot.sparge?
   for(i in seq(along.with=nl)){
     if(is.na(match(names(nl)[i], table=names(x)))){ 
         x <-  c(unlist(x), nl[i])

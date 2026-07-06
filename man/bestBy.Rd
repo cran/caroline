@@ -7,14 +7,16 @@ Finding the an extreme record for each group within a dataset is a more challeng
 This function provides a easy interface to that functionality either using R (fast for small data frames) or SQL (fastest for large data)
 }
 \usage{
-bestBy(df, by, best, clmns=names(df), inverse=FALSE, sql=FALSE)
+bestBy(df, by, best, top=1, clmns=names(df), rebind=TRUE, inverse=FALSE, sql=FALSE)
 }
 \arguments{
 \item{df}{a data frame.}
 \item{by}{the factor (or name of a factor in df) used to determine the grouping.}
-\item{clmns}{the colums to include in the output.}
 \item{best}{the column to sort on (both globally and for each sub/group)}
-\item{inverse}{the sorting order of the sort column as specified by 'best'}
+\item{top}{the top N from each grouping, as determined by "by".}
+\item{clmns}{the colums to include in the output.}
+\item{rebind}{whether or not to 'rebind' the grouped results back into the same data.frame (not available in sql=T)}
+\item{inverse}{the sorting order of the sort column as specified by 'best' (ie, converts 'best' to 'worst')}
 \item{sql}{whether or not to use SQLite to perform the operation.}}
 \value{
 A data frame of 'best' records from each factor level
@@ -30,6 +32,10 @@ blast.results <- data.frame(score=c(1,2,34,4,5,3,23),
                             )
 best.hits.R <- bestBy(blast.results, by='query', best='score', inverse=TRUE)
 best.hits.R
+
+top3.hits.4ea <- bestBy(blast.results, by='query', best='score', inverse=TRUE, top=3, rebind=FALSE)
+top3.hits.4ea
+
 ## or using SQLite
 best.hits.sql <- bestBy(blast.results, by='query', best='score', inverse=TRUE, sql=TRUE)
 best.hits.sql
