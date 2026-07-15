@@ -8,10 +8,10 @@ This is a simple function which grabs the current plot dimentions and adjusts th
 usr2lims(adj=.04)
 }
 \arguments{
-\item{adj}{The automatic adjustment factor 'plot' adds to buffer the specified plot dimentions.}
+\item{adj}{The automatic adjustment factor 'plot' adds to buffer the specified plot dimensions.}
 }
 \value{
-A 2 item (x and y) list of 2 item (min and max) vectors for x and y limits of the current plot area
+A 2 item (x and y) list of 2 item (min and max) vectors for x and y limits of the current plot area.
 }
 \seealso{
 par

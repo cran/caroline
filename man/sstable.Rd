@@ -9,10 +9,10 @@ A wrapper for the "table()" function that also calculates the row-wise sum and s
 sstable(x, idx.clmns, ct.clmns = NULL, na.label = "NA")
 }
 \arguments{
-\item{x}{list of vectors or a dataframe}
-\item{idx.clmns}{index columns}
-\item{ct.clmns}{count columns}
-\item{na.label}{row label used for na columns}
+\item{x}{list of vectors or a dataframe.}
+\item{idx.clmns}{index columns.}
+\item{ct.clmns}{count columns.}
+\item{na.label}{row label used for na columns.}
 }
 \seealso{
 ledghead, table, order, sort

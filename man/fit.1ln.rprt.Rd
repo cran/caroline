@@ -10,16 +10,16 @@ fit.1ln.rprt(fit, method=c('std.dev','p-value')[1], decimal.places=3,
 }
 \arguments{
 \item{fit}{a fit model}
-\item{method}{how to calculate the number of pluses or minuses before each coefficient name (default is standard deviations)}
-\item{decimal.places}{the number of decimal places to use in reporting p-values}
-\item{name.char.len}{the maximum length to use when truncating variable names}
-\item{R2}{boolean for also returning/printing R^2 values}
-\item{print.inline}{should the outout string be printed to the terminal?}
+\item{method}{how to calculate the number of pluses or minuses before each coefficient name (default is standard deviations).}
+\item{decimal.places}{the number of decimal places to use in reporting p-values.}
+\item{name.char.len}{the maximum length to use when truncating variable names.}
+\item{R2}{boolean for also returning/printing R^2 values.}
+\item{print.inline}{should the output string be printed to the terminal?}
 \item{rtrn.line}{should the output string be returned as a characters string?}
-\item{mn}{model number prefixed to printout if 'print.inline' is TRUE}
+\item{mn}{model number prefixed to printout if 'print.inline' is TRUE.}
 }
 \value{
-A character string of the form "++var1 +var5 var3 | -var2 --var4" indicating signifcance and direction of regression results
+A character string of the form "++var1 +var5 var3 | -var2 --var4" indicating significance and direction of regression results.
 }
 \examples{
 

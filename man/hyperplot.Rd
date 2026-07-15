@@ -21,7 +21,7 @@ hyperplot(x, y = NULL, annout = 1:length(x),
 \item{link}{create a linked lookup table from image to the annout table.}
 \item{browse}{load the html page automatically via R.}
 \item{cex}{character expansion for points}
-\item{...}{other paramters passed on to plot()}
+\item{...}{other parameters passed on to plot()}
 }
 \seealso{
 \link{browseURL}
@@ -51,7 +51,7 @@ y <- c(y.out, y.in)
 ## simplest version
 hyperplot(x,y, main=main.hov)
 
-## same but with annotations being supplied as a paramter (instead of names on x)
+## same but with annotations being supplied as a parameter (instead of names on x)
 names(x) <- NULL
 hyperplot(x,y, annout=toupper(letters), main=main.hov)
 

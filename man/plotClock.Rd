@@ -2,8 +2,7 @@
 \alias{plotClock}
 \title{Plot a simple clock.}
 \description{
-Used to create a clock on a plot as a way to keep track of the additional 
-parameter of time for use in animated movies of multiple plots.}
+Used to create a clock on a plot as a way to keep track of the additional parameter of time for use in animated movies of multiple plots.}
 \usage{
 plotClock(hour, minute, x0 = 0, y0 = 0, r = 1)
 }

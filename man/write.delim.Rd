@@ -2,7 +2,7 @@
 \alias{write.delim}
 \title{Write a (tab) delimited text file.}
 \description{
-A simple wrapper for write.table with the same options as read.delim
+A simple wrapper for write.table with the same options as read.delim.
 }
 \usage{
 write.delim(df, file, quote = FALSE, row.names = FALSE, sep = "\t", ...)

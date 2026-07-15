@@ -1,5 +1,5 @@
 
-.citation <- paste("Schruth, D.M. (2026). 'caroline: A Collection of Database, Data Structure, Visualization, and Utility Functions for R'. Comprehensive R Archive Network, R package version", packageDescription("caroline")$Version ," https://CRAN.R-project.org/package=caroline.")
+.citation <- paste('Schruth, D.M. (2026). "caroline: A Collection of Database, Data Structure, Data Conversion, Visualization, Reporting, and Utility Functions." Comprehensive R Archive Network, R package version', packageDescription("caroline")$Version ," https://CRAN.R-project.org/package=caroline")
 
 .onAttach <- function(...){
     packageStartupMessage()

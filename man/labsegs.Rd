@@ -2,7 +2,7 @@
 \alias{labsegs}
 \title{Buffered Segments for Point Labels}
 \description{
-This function is a wrapper for segments which trigonometrically shortens the lines that are near the "1" end so as not to cluter or overplot the text label it is attached to.
+This function is a wrapper for segments which trigonometrically shortens the lines that are near the "1" end so as not to clutter or overplot the text label it is attached to.
 }
 \usage{
 labsegs(x0, y0, x1, y1, buf=.3, ...)

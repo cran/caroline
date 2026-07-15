@@ -10,10 +10,10 @@ rerowname(df, old='NA', new='unknown')
 \arguments{
 \item{df}{A dataframe with rownames.}
 \item{old}{The row name to be replaced.}
-\item{new}{The replacment row name.}
+\item{new}{The replacement row name.}
 }
 \value{
-A dataframe with one new rowname
+A dataframe with one new rowname.
 }
 \examples{
 

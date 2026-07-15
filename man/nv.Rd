@@ -3,18 +3,18 @@
 \author{David Schruth}
 \title{Create a named vector from a dataframe, table or vector}
 \description{
-The '$' or "[," operators for dataframes and tables do not carry along with them the row names.  This function provides a solution for this problem.  Additionally this function will accept a vector of values and a corresponding vector of value names--an ideal, in-line way for setting named-vectors as default parameters in new functions. If x is not specified, x will be populated with an integer vector of the same length as name. Now there is also a way to use nv to retrive named vectors from two-colunn lookup tables using the new paramter key.clmn, which defaults to 'id')
+The '$' or "[," operators for dataframes and tables do not carry along with them the row names.  This function provides a solution for this problem.  Additionally this function will accept a vector of values and a corresponding vector of value names--an ideal, in-line way for setting named-vectors as default parameters in new functions. If x is not specified, x will be populated with an integer vector of the same length as name. Now there is also a way to use nv to retrieve named vectors from two-column lookup tables using the new paramter key.clmn, which defaults to 'id').
 }
 \usage{
 nv(x= seq(along = name), name = letters[length(x)], key.clmn = "id")
 }
 \arguments{
-\item{x}{The source dataframe, table, vector, or factor}
-\item{name}{a vector of length two specifying the data and name colunmns of xas a dataframe OR an [x-length] vector of names of vector x (if a vector) OR a vector [of length=2] specifying the columns (values & names) of x passed in as a dataframe}
+\item{x}{The source dataframe, table, vector, or factor.}
+\item{name}{a vector of length two specifying the data and name columns of x as a dataframe OR an [x-length] vector of names of vector x (if a vector) OR a vector [of length=2] specifying the columns (values & names) of x passed in as a dataframe.}
 \item{key.clmn}{a string specifying which column name in x (only when x is a two-column [lookup] data.frame) are values, where the other clmn are used as names for these values.}
 }
 \value{
-a named vector or factor
+a named vector or factor.
 }
 \seealso{
 \link{vector},\link{name}

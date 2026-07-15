@@ -2,7 +2,7 @@
 \alias{tab2df}
 \title{Table to Data Frame}
 \description{
-Convert a table to a dataframe while perserving the same number of columns and rows and names of each.
+Convert a table to a dataframe while preserving the same number of columns and rows and names of each.
 }
 \usage{
 tab2df(x, ...)
@@ -18,7 +18,7 @@ tab2df(x, ...)
 table
 }
 \value{
-a dataframe
+A dataframe.
 }
 \examples{
 

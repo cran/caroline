@@ -8,11 +8,11 @@ Takes the ellipsis function parameter (of optional named arguments) and compares
 ellipsis.defaults(x, nl)
 }
 \arguments{
-\item{x}{the existing ellipsis passed as "list(...)"}
-\item{nl}{a named list of default parameter values}
+\item{x}{the existing ellipsis passed as "list(...)".}
+\item{nl}{a named list of default parameter values.}
 }
 \value{
-a modified ellipsis variable (a named list of optional parameter values)
+a modified ellipsis variable (a named list of optional parameter values).
 }
 \examples{
 

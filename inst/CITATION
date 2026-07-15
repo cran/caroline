@@ -1,14 +1,18 @@
-bibentry(bibtype = "Article",
-  title        = "caroline: A Collection of Database, Data Structure, Visualization, and Utility Functions for R",
-  author       = c(person(given = "David",
-                          family = "Schruth")),
-  journal      = "Comprehensive R Archive Networkx`",
-  year         = "2026",
-  header       = "To cite caroline in publications use:",
-  textVersion  =
-  paste("David M. Schruth (2026).",
-        "caroline A Collection of Database, Data Structure, Visualization, and
-        Utility Functions for R.",
-        "Comprehensive R Archive Network",
-        "https://CRAN.R-project.org/package=caroline")
-)
+if (!exists("meta") || is.null(meta)) meta <- packageDescription("caroline")
+title <- sprintf("{%s}: %s", meta$Package, meta$Title)
+author <- eval(parse(text = meta$`Authors@R`))
+author <- author[sapply(author$role, function(r) "aut" %in% r)]
+pub   <- "Comprehensive R Archive Network"
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+
+bibentry(bibtype = "Manual",
+         title   = title,
+         author  = author,
+         year    = year,
+         publication = pub,
+         note    = note,
+         url     = "https://CRAN.R-project.org/package=caroline",
+         doi     = "10.32614/CRAN.package.caroline",
+         header  = "To cite caroline in publications use:")

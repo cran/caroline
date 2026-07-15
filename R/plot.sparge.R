@@ -12,15 +12,6 @@
     return(new.plot.defaults)
 }
 
-## MODEL SPLITTING
-.formula2parts <- function(formula){
-    form <- as.formula(formula);    
-    if( length(form) != 3){stop("formula is malformed")}
-    form.parts <- as.character(form)
-    form.preds <- strsplit(form.parts[3], '[ |]+')[[1]]
-    return(list(outcome=form.parts[2], predictors=form.preds))
-}
-
 .sparge.plot.sub.functions <- c('legend', 'boxplot', 'axis', 'mtext') # other plotting functions used in wrapper
 .sf.OR.pattern <- function(except='', function.vector=.sparge.plot.sub.functions){ 
     if(!is.na(except)){function.vector <- function.vector[(!function.vector==except)]}
@@ -28,18 +19,8 @@
 }
 
 
-# new function, yet to be used, but should be several times above to eliminate redundancies
-.parse.params.pass.parts <- .pppp <- function(defaults, dots, reserved, sub.funcs, this.func=NA, unprefix=paste(this.func,'.',sep="")){
-         p.viauser <- dots[!(dots%in%reserved) & !grepl(x=names(dots), pattern=.sf.OR.pattern(except=this.func, function.vector=sub.funcs))]
-         if(!is.na(this.func)){  #'this.func' is the name of a sub function within the wraper function (plot.sparge), otherwise no un-prefixing
-         p.viauser <- p.viauser[grepl(x=names(p.viauser), pattern=paste('^',unprefix,sep=''))]
-   names(p.viauser) <- sub(pattern=unprefix, replacement='', x=names(p.viauser))} 
-         p  <- c(defaults[!names(defaults) %in% names(p.viauser)], p.viauser)
-  return(p)
-}
 
-
-plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NULL}, out.range=range(unlist(x)),  cpd=0, cpw=.4, jit.f=1, horiz=TRUE, add=FALSE, lgnd='auto', zl=FALSE,  pt.cols=1, boxol='gray',alpha=.2, wiskers=1.5, ...){
+plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NULL}, out.range=range(unlist(x)),  cpd=0, cpw=.4, jit.f=1, horiz=TRUE, add=FALSE, lgnd='auto', zl=FALSE,  pt.cols=1, boxol='gray',alpha=.2, whiskers=1.5, ...){
     # formula_1 = 'outcome~ predictor1.fp1 | control.fp2" # example
     # strsplit(strsplit(formula_1,'~')[[1]][2], "[|]")[[1]][1]
     verbose <- FALSE
@@ -148,10 +129,9 @@ plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NUL
               x.sub <- subset(x, x[,fp2]==fp2lev)
               x.list <- split(x.sub[ , eval(outcome.name)], x.sub[, eval(fp1)]) 
               # RECURISVE CALL (just down one level each loop iteration) TO PLOT.SPARGE
-              #dots.list <- if(recurs.pct!=1){ DOTS.i}else{ PAG}  ## not sure how to get this to play nice with plain-ol' "..." below, to lab redundancy
               plot.sparge(x.list, out.range=range(x[,outcome.name]), # cat.names=fp1.levs,   
                           pt.cols = lev.cols[fp2lev], cpd=pds[fp2lev], add=news[fp2lev], cpw=cpw/fp2.l.ct, #xaxt=axts[fp2lev], axt=axts[fp2lev],
-                           horiz=horiz, zl=zl, jit.f=jit.f, boxol=boxol, alpha=alpha, wiskers=wiskers, 
+                           horiz=horiz, zl=zl, jit.f=jit.f, boxol=boxol, alpha=alpha, whiskers=whiskers, 
                            recursion=recurs.pct, ...)  # should be employing some kind of logic using PAG & DOTS.i (the use of "..." is temporary)
             } # end [recursive] looping through sub-lists of x (via fp2's factor levels)
             if(lgnd=='auto'){    # THIS CHUNK GETS RUN LAST FOR THE ENTIRE FUNCTION (... for "f= predict | CONTROL" calls only, obviously)
@@ -159,13 +139,8 @@ plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NUL
                 if(!horiz){low.dense.lgnd.pos <- legend.position( as.numeric(x[,fp1]), x[,outcome.name] )} 
                 lgnd.res <- c('legend','recursion')
                 lgnd.defaults <- list(x=low.dense.lgnd.pos, legend=fp2.levs, pt.bg=lev.cols, pch=21, inset=.1, title=fp2) #col='gray'
-                #dots.list  <- DOTS.i[!names(DOTS.i) %in% c('legend','recursion') &                  # input not2 trump 'x', 'legend
-                #                      !grepl(x=names(DOTS.i), pattern=.sf.OR.pattern(except='legend'))] # ... or any other sub.function params
-                #lgnd.viauser <- dots.list[grepl(x=names(dots.list), pattern='^legend.')]; 
-          #names(lgnd.viauser) <- sub(pattern='legend.', replacement='', x=names(lgnd.viauser)) 
                 lgnd.defsuser <- .pppp(defaults=lgnd.defaults, dots=DOTS.i, reserved=lgnd.res, sub.funcs=.sparge.plot.sub.functions, this.func='legend')
                 do.call("legend",c(lgnd.defsuser))#lgnd.defaults[!names(lgnd.defaults) %in% names(lgnd.viauser)], )) # new version (yay "legend.[params]")
-                #legend(x=low.dense.lgnd.pos, legend=fp2.levs, pt.bg=lev.cols, pch=21, col='gray',inset=.1, title=fp2)# old version (no "legend.[params]")
             x <- NULL ; f <- NULL  # facilitates SKIPPING SECOND HALF of this script (it runs anyway (SKIPPING TO OPTION 3) but only at recursive level)
             } # end if fp2 exists (two predictors) 
         } # if /else [ via fp1 vs fp2]  both x & f are NOT NULL  in top case send to option 2
@@ -207,7 +182,6 @@ plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NUL
        if(cpw > .5) stop("'cpw' should not be greater than .5 (plotted points of [integer spaced] categories will overlap!)")
 
        pred.pos.range <- c(min(cats)-abs(cpw), max(cats)+abs(cpw))   # used for (categorical) plot limits (xlim or ylim)
-      #pred.positions <- lapply(1:length(x), function(pp) jitter(rep(pp,length(x[[names(x)[pp]]])), factor=jit.f, amount=cpw/2) + cpd)   ### !!!!!!!!
        pred.positions <- lapply(names(x), function(pn) jitter(rep(cats[pn], length(x[[pn]])), factor=jit.f, amount=cpw/2) + cpd)   ### !!!!!!!!
 
        cat.axis.range.spreader <- .4
@@ -218,25 +192,16 @@ plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NUL
        } 
        par(new=add)
        xy.defaults <- append(list(xs, ys, ylim=ylim, xlim=xlim, pch=21, bg=pt.cols), plot.axes.globals); xy.res <- c('xs','ys','recursion')
-       #xy.viauser <- DOTS.i[!(names(DOTS.i) %in% c('xs','ys','recursion')) &     # input not to trump 'xs', 'ys', recursion etc
-       #                    !grepl(x=names(DOTS.i), pattern=.sf.OR.pattern())]  # ... or any other sub.function params
-       #xy.viauser <- c(PAG.i[!names(PAG.i) %in% names(xy.viauser)], xy.viauser)  #  user specified DOTS will trump PAG default/updated values
        xy.defsuser <- .pppp(defaults=xy.defaults, dots=DOTS.i, reserved=xy.res, sub.funcs=.sparge.plot.sub.functions, this.func=NA)
-       #do.call("plot",c(xy.defaults[!names(xy.defaults) %in% names(xy.viauser)], xy.viauser))#xy.defsuser  
        do.call("plot",xy.defsuser)   ##### SPARGE POINT-SWATHS PRODUCED HERE #####
-       #plot(xs, ys, ylim=ylim, xlim=xlim, xaxt=xxt, yaxt=yxt, pch=21, bg=pt.cols, ...)   # old version
 
        gray.scale <- gray(pgeom(length(xs), prob=.02) -.01)
        if(!is.null(boxol)){
         if(boxol=='gray'){ bc = gray.scale }else{ bc=boxol}  
-        if(is.null(wiskers)){wl = 0; sl = 0}else{wl = 2; sl = 1}
+        if(is.null(whiskers)){wl = 0; sl = 0}else{wl = 2; sl = 1}
         bp.defaults <- append(list(x=x, at=1:length(x)+cpd, horizontal=horiz, col='transparent', add=TRUE,  #las=1,  varwidth=T, 
-                              border=bc, boxwex=cpw, range=wiskers, outline=TRUE, pch='x', whisklty=wl, staplelty=sl), 
+                              border=bc, boxwex=cpw, range=whiskers, outline=TRUE, pch='x', whisklty=wl, staplelty=sl), 
                        plot.axes.globals) ; bp.res <- c('x','f', names(PAG), 'recursion')
-        #dots.list <- DOTS.i[!(names(DOTS.i) %in% c('x','f', names(PAG), 'recursion')) &        # input not to trump 'x', 'f', recursion etc
-        #                    !grepl(x=names(DOTS.i), pattern=.sf.OR.pattern(except='boxplot'))] # ... or any other sub.function params
-        #bp.viauser <- dots.list[grepl(x=names(dots.list), pattern='^boxplot.')]; 
-  #names(bp.viauser) <- sub(pattern='boxplot.', replacement='', x=names(bp.viauser))       # could also just pass via boxplot(pars=par())?? 
         bp.defsuser <- .pppp(defaults=bp.defaults, dots=DOTS.i, reserved=bp.res, sub.funcs=.sparge.plot.sub.functions, this.func='boxplot')
         do.call("boxplot",c(bp.defsuser)) #bp.defaults[!names(bp.defaults) %in% names(bp.viauser)], ))  #####   BOXPLOT OVERLAY PRODUCED HERE  #####
        }  ## finished adding boxes via boxplot() call
@@ -260,10 +225,6 @@ plot.sparge <- function(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NUL
 
         # MTEXT
         if(add==FALSE && is.na(recursion)){  # need a smoother check that doesn't over-do it too much with the text overprinting
-         #dots.list <- DOTS.i[!(names(DOTS.i) %in% c('side','line','text')) &     # input not to trump 'xs', 'ys', recursion etc
-         #                   !grepl(x=names(DOTS.i), pattern=.sf.OR.pattern(except='mtext'))]  # ... or any other sub.function params
-         #mt.viauser <- dots.list[grepl(x=names(dots.list), pattern='^mtext.')]; 
-  #names(mt.viauser) <- sub(pattern='mtext.', replacement='', x=names(mt.viauser))       # could also just pass via boxplot(pars=par())?? 
          if(!(PAG$xlab=='' && !('xlab' %in% names(DOTS.i))) ){     # these checks are overkill, will fix
           xlab <- ifelse('xlab' %in% names(DOTS.i), DOTS.i$xlab, PAG$xlab); if(xlab!=""){mtext(side=1, line=mgp[1], text=xlab, cex=lab.cex)}}
          if(!(PAG$ylab=='' && !('ylab' %in% names(DOTS.i))) ){                   # #...=mt.viauser)}}

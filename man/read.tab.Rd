@@ -15,8 +15,8 @@ read.tab(file, check.row.ct = TRUE, stringsAsFactors = FALSE,
 \item{check.row.ct}{logical: use 'count.fields' to independently verify the number of rows read.table reads into memory?}
 \item{stringsAsFactors}{logical: should character vectors be converted to factors?.}
 \item{quote}{the set of quoting characters.}
-\item{header}{boolean specifying if the first row serves as labels for the columns}
-\item{...}{other paramters passed to read.delim.}
+\item{header}{boolean specifying if the first row serves as labels for the columns.}
+\item{...}{other parameters passed to read.delim.}
 }
 \value{
 a dataframe.

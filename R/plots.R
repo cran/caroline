@@ -1,4 +1,4 @@
-makeElipseCoords <- function(x0 = 0, y0 = 0, b = 1, a = 1, alpha = 0, pct.range = c(0,1), len = 50){
+makeEllipseCoords <- function(x0 = 0, y0 = 0, b = 1, a = 1, alpha = 0, pct.range = c(0,1), len = 50){
   rad.range <- 2 * pi * pct.range
   theta <- seq(rad.range[1], rad.range[2], length.out=len)
   x <- x0 + a * cos(theta) * cos(alpha) - b * sin(theta) * sin(alpha)
@@ -9,11 +9,11 @@ makeElipseCoords <- function(x0 = 0, y0 = 0, b = 1, a = 1, alpha = 0, pct.range 
 
 plotClock <- function(hour, minute, x0 = 0, y0 = 0, r = 1){  
   
-  circleXY <- makeElipseCoords(x0 = x0, y0 = y0, b = 1.1*r, a = 1.1*r, alpha = 0, 
+  circleXY <- makeEllipseCoords(x0 = x0, y0 = y0, b = 1.1*r, a = 1.1*r, alpha = 0, 
                                pct.range = c(0,1), len = 50)
-  quarHourTickMarksXY <- makeElipseCoords(x0 = x0, y0 = y0, b = 1.05*r, a = 1.05*r, alpha = (pi/2), 
+  quarHourTickMarksXY <- makeEllipseCoords(x0 = x0, y0 = y0, b = 1.05*r, a = 1.05*r, alpha = (pi/2), 
                                pct.range = c((12*4-1)/(12*4),0), len = 12*4)
-  hourLabelsXY <- makeElipseCoords(x0 = x0, y0 = y0, b = .9*r, a = .9*r, alpha = (pi/2), 
+  hourLabelsXY <- makeEllipseCoords(x0 = x0, y0 = y0, b = .9*r, a = .9*r, alpha = (pi/2), 
                                pct.range = c(11/12,0), len = 12)
 
   polygon(circleXY)
@@ -21,12 +21,12 @@ plotClock <- function(hour, minute, x0 = 0, y0 = 0, r = 1){
   text(quarHourTickMarksXY[,1],quarHourTickMarksXY[,2],".")
 
   minuteV <- minute/60
-  minuteVXY <- makeElipseCoords(x0 = x0, y0 = y0, b = r, a = r, alpha = 0, 
+  minuteVXY <- makeEllipseCoords(x0 = x0, y0 = y0, b = r, a = r, alpha = 0, 
   				               pct.range =  (.25 - rep(minuteV,2)), len = 1)
   segments(x0,y0,minuteVXY$x[1],minuteVXY$y[1])
 
   hourV <- hour/12
-  hourVXY <- makeElipseCoords(x0 = x0, y0 = y0, b = .7*r, a =.7*r, alpha = 0, 
+  hourVXY <- makeEllipseCoords(x0 = x0, y0 = y0, b = .7*r, a =.7*r, alpha = 0, 
   				               pct.range = (.25 - rep(hourV,2)), len = 1)
   segments(x0,y0,hourVXY$x,hourVXY$y)  
 
@@ -179,18 +179,44 @@ legend.position <- function(x,y,xlim=NULL,ylim=NULL, start=.05, end=.5, incr=.01
 
 
 # split plot to investigate confounding between modeled variables (inspired by lattice's multi-panel lattice graph)
-plot.confound.grid <- function(x,Y='y',X='x',confounder='z',breaks=3, mains='breaks', ...){
+plot.confound.grid <- function(x, f, breaks=4, mains=NA, ...){
  oldpar <- par(no.readonly=TRUE);
- par(mfrow=c(1,breaks))
- on.exit(par(oldpar))
 
- if(length(breaks)==1)
-  breaks   <- c(quantile(  x[,confounder], probs = seq(0, 1, by = 1/breaks),na.rm=TRUE))
- ecs   <- split(x,cut(  x[,confounder], breaks=breaks));
+ on.exit(par(oldpar))
+ if(!is.data.frame(x) || (!.can.formula(f))) 
+   stop('"x" should be a data frame & "f" is should be a formula of the form "y ~ x | confounder"')
+ if(!.is.formula(f) & .can.formula(f)){
+   message('f should be formula, converting it')
+   f <- as.formula(f)
+ }
+ formula.parts <- .formula2parts(f)
+ fp.vect <- unlist(formula.parts) 
+ if(!all(fp.vect %in% names(x)))
+   stop(paste("all formula terms (",paste(fp.vect, collapse=''),") must correspond to",
+        "names in the dataframe  (",paste(names(x),collapse=','),")"))
+
+ Y <- formula.parts$outcome
+ X <- formula.parts$predictors[1]
+ confounder <- formula.parts$predictors[2]
+
+ if(is.numeric(x[,confounder]) && (length(breaks)==1)){
+   splits   <- quantile(x[,confounder], probs = seq(0, 1, by = 1/breaks), na.rm=TRUE)
+   confounding.factor   <- cut(x[,confounder], breaks=unique(splits), include.lowest=T)#));
+   n.breaks <- length(unique(splits))
+ }else{
+   if(!.can.factor(x[,confounder])) stop('if your confounder is not numeric it at least must be a factor')
+   message('reading your confounder as a factor')
+   confounding.factor <- as.factor(x[,confounder])
+   n.breaks <- length(levels(confounding.factor))
+   if(n.breaks > 8) warning("consider splitting your factor into fewer (than 8) levels!")
+ }
+ ecs <- split(x, confounding.factor)
+
+ par(mfrow=c(1,length(ecs))) #max(n.breaks-1,
 
  ellipsis <- ellipsis.defaults(x=list(...), nl=list(ylab=Y,xlab=X))
 
- if(mains=='breaks')
+ if(is.na(mains))
   mains <- paste(confounder, as.character(names(ecs)))
  if(length(mains)!=length(ecs)){
   warning('mains must be a vector of plot titles equal to the breaks')
@@ -199,11 +225,11 @@ plot.confound.grid <- function(x,Y='y',X='x',confounder='z',breaks=3, mains='bre
  for(i in 1:length(ecs)){ 
   #with(ecs[[i]], plot(get(X),get(Y),  opt.args)))  
   do.call(plot, c(list(x=ecs[[i]][,X],y=ecs[[i]][,Y], main=mains[i]),  ellipsis)) 
-  with(ecs[[i]],abline(lm(get(Y)~get(X))))
+  with(ecs[[i]],abline(lm(get(Y)~get(X)), lwd=3))
  }
 }
 
-ellipsis.defaults <- function(x, nl){     #  consolodate this function with .parse.params.pass.parts() in plot.sparge?
+ellipsis.defaults <- function(x, nl){ #  consolodate this with .parse.params.pass.parts() written for plot.sparge?
   for(i in seq(along.with=nl)){
     if(is.na(match(names(nl)[i], table=names(x)))){ 
         x <-  c(unlist(x), nl[i])
@@ -211,4 +237,17 @@ ellipsis.defaults <- function(x, nl){     #  consolodate this function with .par
  }
  return(x)
 }
+
+
+# new function, yet to be used, but should be several times above to eliminate redundancies
+.parse.params.pass.parts <- .pppp <- function(defaults, dots, reserved, sub.funcs, this.func=NA, unprefix=paste(this.func,'.',sep="")){
+         p.viauser <- dots[!(dots%in%reserved) & !grepl(x=names(dots), pattern=.sf.OR.pattern(except=this.func, function.vector=sub.funcs))]
+         if(!is.na(this.func)){  #'this.func' is the name of a sub function within the wraper function (plot.sparge), otherwise no un-prefixing
+         p.viauser <- p.viauser[grepl(x=names(p.viauser), pattern=paste('^',unprefix,sep=''))]
+   names(p.viauser) <- sub(pattern=unprefix, replacement='', x=names(p.viauser))} 
+         p  <- c(defaults[!names(defaults) %in% names(p.viauser)], p.viauser)
+  return(p)
+}
+
+
 

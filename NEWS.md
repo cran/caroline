@@ -4,7 +4,13 @@
 * sparge (lines): improve line plotting logic for simpler models (so that just the medians of the first predictor are used in point plotting/joining)   
 * groupBy & bestBy: implement support for providing a list to the "by" argument so that it returns a tabular or nested lists of results
 * nerge: add a way to recycle the names of the merged elments so that one of them is kept as a clmn via a, say, 'keep.row.clmn' param
+* merge public ellipsis.defaults() function with new internal verison that uses prefixes to wrap multiple functions
  
+# caroline 1.1.2
+
+* documentation cleanup 
+* plot.confound.grid(): switched from X=,Y=,confounder params to f='Y ~ X | confounder' based input
+
 # caroline 1.1.1
 
 * Overhauled plot.sparge() 
@@ -15,7 +21,7 @@
 *  - better all around *documentation* in man page and *commenting* of code
 * Also implemented some features/fixes/documentation with/for *heatmatrix, nerge, pct, nv, bestBy, & tab2dv*
 * Eg: heatmatrix() has some friendlier defaults (xlab/ylab) with an added option to specify the 'text.colors' superimposed over the matrix cells
-* Eg: nerge() now has an entirely new (more truly *database-style*) way of *merging* using *".id" column-name suffixes* ()for simple star schema) 
+* Eg: nerge() now has an entirely new (more truly *database-style*) way of *merging* using *".id" column-name suffixes* (for simple star schema) 
 * Eg: nerge() ... also ... fixed a bug where more than two list elements (eg, named vectors) couldn't be joined together
 * Eg: pct() beyond just dataframes, it now accepts vector imput, plus rounding & appending a "%"  
 * Eg: nv() documentation [& operations]  improved with better in-function messaging
@@ -25,7 +31,7 @@
 
 # caroline 1.0.0
 
-* Fixed a bug with plot.sparge and the point-swath width overlap (Though, there does remain  a small width problem with plot-area under-utilization)
+* Fixed a bug with plot.sparge and the point-swath width overlap (though, a general width-related plot-area under-utilization remains)
 
 # caroline 0.9.8
 
@@ -34,7 +40,7 @@
 # caroline 0.9.0
 
 * "distro.dots" implemented -> later to be renamed to "sparge plot"
-* violins() removed due to disinterest in maintaining its overly-complex (eg codebase/package) dependencies ('sm')
+* violins() retired due to (eg codebase) maintainence disrepair
 
 # caroline 0.8.0
 

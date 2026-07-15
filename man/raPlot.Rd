@@ -19,7 +19,7 @@ raPlot(a, b=NULL, uniques=5, normalize=FALSE,
 \item{uniques}{a boolean specifying whether or not to plot the library-unique genes (those with zero counts in one or the other library).}
 \item{normalize}{A boolean specifying whether or not to normalize the counts into proportions.}
 \item{nr}{a numeric value indicating the asymptotic normalization ratio line.}
-\item{alpha}{a statisical significance value.}
+\item{alpha}{a statistical significance value.}
 \item{jitter}{whether or not or how much to jitter the a and b counts into surrounding, non-overlapping space.}
 \item{jit.wgts}{a weight vector used to spread the counts of a and b into surrounding, non-overlapping space.}
 \item{rex}{a numeric value specifying the radial expansion of the plot points.}

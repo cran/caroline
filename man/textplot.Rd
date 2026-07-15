@@ -8,12 +8,12 @@ Generate a new plot window with just text centered in the middle.  This is ideal
 textplot(..., x=1, y=1)
 }
 \arguments{
-\item{...}{parameters passed to the 'text' function}
+\item{...}{parameters passed to the 'text' function.}
 \item{x}{the x position of the text.}
 \item{y}{the y position of the text.}
 }
 \value{
-A new plot window wiht just text 
+A new plot window with just text.
 }
 \seealso{
 \code{\link{layout}, \link{text}}

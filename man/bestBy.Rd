@@ -12,14 +12,14 @@ bestBy(df, by, best, top=1, clmns=names(df), rebind=TRUE, inverse=FALSE, sql=FAL
 \arguments{
 \item{df}{a data frame.}
 \item{by}{the factor (or name of a factor in df) used to determine the grouping.}
-\item{best}{the column to sort on (both globally and for each sub/group)}
+\item{best}{the column to sort on (both globally and for each sub/group).}
 \item{top}{the top N from each grouping, as determined by "by".}
-\item{clmns}{the colums to include in the output.}
-\item{rebind}{whether or not to 'rebind' the grouped results back into the same data.frame (not available in sql=T)}
-\item{inverse}{the sorting order of the sort column as specified by 'best' (ie, converts 'best' to 'worst')}
+\item{clmns}{the columns to include in the output.}
+\item{rebind}{whether or not to 'rebind' the grouped results back into the same data.frame (not available in sql=T).}
+\item{inverse}{the sorting order of the sort column as specified by 'best' (ie, converts 'best' to 'worst').}
 \item{sql}{whether or not to use SQLite to perform the operation.}}
 \value{
-A data frame of 'best' records from each factor level
+A data frame of 'best' records from each factor level.
 }
 \seealso{
 \link{groupBy}

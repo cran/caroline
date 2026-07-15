@@ -14,7 +14,7 @@
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
 \newcommand{\Rpackage}[1]{{\textit{#1}}}
 
-%\VignetteIndexEntry{Global Drivers of Natural Forest Loss: \\ a visual workflow for functions in the 'caroline' R-package}
+%\VignetteIndexEntry{Global Drivers of Natural Forest Loss: a visual workflow for functions in the 'caroline' R-package}
 \begin{document}
 \setkeys{Gin}{width=0.9\textwidth}
 \setkeys{Gin}{height=0.95\textwidth}
@@ -37,20 +37,20 @@ vers <- pkgD$Version
 \maketitle
 \section{Introduction}
 
-Beyond use for lumber and paper products, trees provide a host of other direct and indirect benefits to human-kind. Beside from the personal benefits---bestowing us with shade and a pleasing aesthetic to our everyday visual backdrop---they can also do the more sober work of protecting fauna, preventing erosion, buffering the water-table, and performing many other ecosystem services, importantly including the production of oxygen we breathe from carbon-dioxide (normally a net-CO$_2$ sink in forests) \cite{arborDay} \cite{EPA} \cite{natureCons} \cite{HarrisGibbs21WRI}. Unfortunately, the world's forests are being depleted almost entirely due to human behaviors \cite{Eckholm1979}. These activities include: clearing land to feed our growing population (eg, \textbf{agriculture}), housing people by restructuring felled [woody] vegetation (eg, \textbf{lumber}), powering our increasingly technology [machine \& computer] driven industries (eg, \textbf{mining}), and indirectly as an result of ([anthropogenic] global-warming fueled) \textbf{wildfires}.
+Beyond use for lumber and paper products, trees provide a host of other direct and indirect benefits to human-kind. Beside from the personal benefits---bestowing us with shade and a pleasing aesthetic to our everyday visual backdrop---they can also do the more patiently earnest work of protecting fauna, preventing erosion, buffering the water-table, as well as performing many other ecosystem services, including both the production of the oxygen we breathe and the uptake of carbon-dioxide (acting as a net-CO$_2$ sink) \cite{arborDay} \cite{EPA} \cite{natureCons} \cite{HarrisGibbs21WRI}. Unfortunately, the world's forests are being depleted almost entirely due to human behaviors \cite{Eckholm1979}. These activities include: clearing land to feed our growing population (eg, \emph{\textbf{agriculture}}), housing people by restructuring felled [woody] vegetation (eg, \emph{\textbf{logging}}), powering our increasingly technology [machine \& computer] driven industries (eg, \emph{\textbf{mining}}), and indirectly as a result of ([anthropogenic] global-warming fueled) \emph{\textbf{wildfires}}.
 
-Here I showcase some of the statistical (especially plotting) tools in the \Rpackage{caroline} (R \cite{Rcore2026}) package (version \Sexpr{vers}) \cite{caroline2026} that serve to highlight these biodiversity-imperiling threats which have done little but increase in severity---not only throughout the Anthropocene, but notably also over the past few decades, as illustrated here by way of analyzing the Global Forest Watch dataset (\cite{GFW2026} \cite{Hansen2013} \cite{Sims2025}). In the following vignette, I highlight these evolving problems while expounding upon the principal findings prevised above. Further notable, while African (The Republic of Congo) and South American countries (Brazil \& Columbia) have recently approached the highest of world-wide [tropical] forest loss numbers, South [East] Asian nations (Indonesia, Malaysia, Laos, Myanmar, India) and Oceania (Papua New Guinea) are rapidly over-taking them just this past decade. Furthermore, mining and (especially) wildfire are catching-up to logging and agriculture, both of which appear to be plateauing over the past few decades. These findings and more are previewed below via demonstration of the many useful functions built into the package.
+Here I showcase the data science (esp. plotting) tools in the \Rpackage{caroline} (R \cite{Rcore2026}) package (version \Sexpr{vers}) \cite{caroline2026} that can serve to uncover these biodiversity-imperiling factors. Such degradations are escalating---not only from the Holocene into the Anthropocene (esp. agriculture), but also this century---especially in certain continents, nations, and jungles---as explored here by way of analyzing the Global Forest Watch dataset \cite{GFW2026} \cite{Hansen2013} \cite{Sims2025}. In the following pages, I spotlight these evolving quandaries while expounding upon the principal findings prevised above. Most notably that---while several African ([D.]R. Congo, \& Madagascar) and South American countries (Brazil, Peru, Bolivia, \& Venezuela) have recently approached the highest of world-wide [tropical] forest loss numbers---South [East] Asian nations (Indonesia, Malaysia, Laos, Myanmar, India) and Oceania (Papua New Guinea) may be on a trajectory for [collectively] superseding such extreme [especially extractive] losses in more current decades. Furthermore, mining and (especially) wildfire appear to be gaining on logging and agriculture, both of which have begun to flatten slightly over the past decade. These findings are previewed below via demonstration of the many useful functions built into the package (eg, multi-variable plots that can help untangle confounding).
 
-My featured analysis tool, introduced here as the 'sparge plot', combines modern plotting technology features (translucent over-plotting) with the simplicity of one the oldest forms of distributional representation: the boxplot \cite{boxplot1978}. Additional plots, innovated since, have improved upon mere boxplots, including the \Rfunction{stripchart()} \cite{stripchart2004}, the \Rpackage{forestplot()} \cite{forest2011}, but these functions, like boxplots themselves, have the drawback of abstracting away too much detail. The even more rudimentary \Rfunction{rug()}, \Rfunction{stem() \& leaf} plot functions attempted to show more unadulterated detail, but these remain rather limited when simultaneously representing any potentially superimposed univariate plot points. There are many plotting functions currently, however, that do a fine job of succinctly showing more distributional detail, including \Rpackage{sinaplot} \cite{sina2018}, \Rpackage{beanplot()} \cite{beanplot2008}, and \Rpackage{vioplot} (note that an instantiation here as \Rfunction{violins()} was withdrawn from \Rpackage{caroline} for greater perspicuity). And some packages can now even showcase both individual points and distributional smoothing summary-shapes simultaneously, as in \Rfunction{raincloud()} \cite{raincloud2021} and \Rfunction{beeswarm()} plots, although these tend to occupy more plotting space than their predecessors.   
+Such an analysis function, debuting here as the 'sparge plot', combines modern plotting innovations with the archetype of distributional summary schema: the boxplot \cite{boxplot1978}. Other canonical functions, such as \Rfunction{stem() \& leaf} plots and \Rfunction{rug()} representations, contrast to any such abstraction by instead revealing unadulterated, datum-level detail of entire distributions---but are therefore also limited by space constraints (character/line limits or [1-D] overplotting) that restrict their utility to only smaller datasets. A more concise work-around for these shortcomings, such as in the \Rfunction{stripchart()} \cite{stripchart2004}, may utilize calls to \Rfunction{jitter()} to venture beyond 1-D and broaden distributional swaths into wide strips---so as to alleviate any obscurity arising from superposition (albeit still width-limited in larger datasets). Because 1-D \& 2-D planar shapes---in both \Rfunction{violins} and to the \Rfunction{boxplot} itself---may abstract-away often important point-level detail, newer plots have migrated toward jitter-like approaches, where all points are splayed out flat in this extra pseudo-dimension (eg, violin-shaped \Rfunction{sina()} and bush-like \Rfunction{beeswarm()} plots). Like the hybrid approach of the \Rfunction{vioplot()}, even more recent successors may deploy a minimalistic ribbon of \Rfunction{rug()}---as in the \Rfunction{beanplot()} \cite{beanplot2008}---or a thin quantile box along or inside polygons or points---as in the three-pronged approach of \Rfunction{raincloud()} plots \cite{raincloud2021}. Many of the above, however, like their \Rfunction{stem()} \& \Rfunction{rug()} predecessors, may still tend to over-occupy [axis-orthogonal] space or inevitably break-down when attempting to visualize all points of a larger dataset.
 
-My hybrid innovation, presented in the form of the \Rfunction{plot.sparge()}, goes even further by revealing the myriad possible underlying nuances of distributional conformation, for even the largest of datasets, in an efficiently compact way---thanks primarily to the broad continuum of possible shades of overlapping translucent points---all while managing to circumvent engineering complexities of external smoothing, density, or positioning algorithms. The added essentialistic scaffolding of a boxplot (with auto-adjusting grayscale-shaded outlines) overlaid atop the underlying data, empowers quantitative visual undergirding in alleviation of any residual coordinate opacity, especially within the most congested areas (of the narrow rectangular strips of point-nebula) within the plot---importantly demarcating the median, quartiles, wiskers (and [thus] possible outliers) of the many point-values so routinely generated by automated systems that typify our modern, data-fertile era.    
+My own data-point accommodating innovation, \Rfunction{plot.sparge()}, also succeeds in revealing myriad possible subtleties underlying distributional density, but in a more efficiently compact way (via narrow rectangular strips of point-nebula). It accomplishes this primarily by leveraging the broad continuum of possible shades of overlapping translucent points, thus circumventing engineering difficulties of smoothing or positioning algorithms en route. The added essentialistic scaffolding of a boxplot (with auto-adjusting grayscale-shaded outlines) overlaid atop the underlying data, acts as a quantitative visual guide in alleviation of any coordinate opacity. This becomes especially helpful in more congested areas---with the overlay importantly demarcating, not only the quartiles [\& median]---but also the whiskers, and thus also, conversely, the many possible outliers that spill out-of-bounds---often an artifact of the immense array of possible values which are so routinely generated by automated systems, increasingly typical in our data-abundant era.    
 
 
 \clearpage
 \section{Software}
 
 <<downloadpackages>>=
-# wget https://cran.r-project.org/src/contrib/Archive/caroline/caroline_1.0.1.tar.gz
+# wget https://cran.r-project.org/src/contrib/Archive/caroline/caroline_1.1.2.tar.gz
 # R CMD INSTALL caroline_1.0.1.tar.gz 
 @
 Building the \Rpackage{caroline} package from source can be easily done by downloading from CRAN. 
@@ -64,29 +64,31 @@ After a successful installation the \Rpackage{caroline} package can be loaded in
 library(caroline)
 @
 
-No other software is required! The sparge function (dissimilar to many analogous functions: \Rpackage{forestplot()}, \Rpackage{sinaplot}, \Rfunction{stripchart()} , \Rfunction{beeswarm()}, \Rfunction{raincloud()}) is efficiently coded and lightweight, by depending on no other software packages (eg, tidyr, dplyr, plotly, ggplot).
+No other software is required! The sparge function (dissimilar to many analogous functions: \Rpackage{vioplot()}, \Rpackage{sinaplot}, \Rfunction{beeswarm()}, \Rpackage{beanplot()}, \Rfunction{raincloud()}) is efficiently coded---and lightweight, in not depending on any other software packages (eg, tidyr, dplyr, plotly, ggplot).
 
 \clearpage
 
 \section{Data}
-The primary dataset used here derives from the Global Forest Watch repository \cite{GFW2026}. After minimal recoding (eg, consolidation of some loss 'driver' levels), merging, and regrouping. Below I read in the tree cover data and continents lookup list and merge them together.
+The primary dataset used here derives from the Global Forest Watch repository \cite{GFW2026}. After minimal external recoding (eg, consolidation of some loss 'driver' levels) as well as subsequent merging and regrouping, I will demonstrate analysis of the [\~{}100K] records of this compact database. Below I read in these tree cover data sets (+ country/driver DB-lookups, and the jungle \& continent tables) and merge them together. (*Note that in the current release of GFW the sub-national level data are not only an order of magnitude greater than the national level data, but there are a few countries where these numbers juxtapose prominently (in [higher vs lower] relative standing) such as Indonesia vs Congo, Paupa New Guinea vs India, \& Mexico vs Bolivia)
 
 <<read>>=
 tl.outcome.var <- 'tc_loss_ha_log'  # the main "treeloss" outcome variable (log of total hectares lost) 
 C.df <- read.csv(system.file("extdata",'countries.contients.csv', package="caroline")); C.df$X <- NULL;#, row.names=2)
 c.dup <- table(C.df$country)>1; C.df <- subset(C.df, !country%in%names(c.dup)[c.dup]); rownames(C.df)<-C.df$country
 continents <- nv(C.df, 2:1)
+
+jungle.DF <- read.csv(system.file("extdata",'jungle',"jungle-nats.csv", package="caroline"))
 ## Global Forest Watch downloaded datafiles   
-#       national level
-alltrees.loss.n  <- read.csv(system.file("extdata",'forest',"GFW-loss-alltrees.national-drivers.DB.csv", package="caroline")) # USE THIS (th=30) ONE INSTEAD
-tropical.loss.n  <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.national-drivers.DB.csv", package="caroline")) # tropical compare to sn!
-#   SUB-national level  (first level just be low nation: eg: state/province)
+#   National level
+alltrees.loss.n  <- read.csv(system.file("extdata",'forest',"GFW-loss-alltrees.national-drivers.DB.csv", package="caroline"))
+tropical.loss.n  <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.national-drivers.DB.csv", package="caroline")) 
+#   SUB-National level  (first level just be low nation: eg: state/province)
 tropical.loss.sn <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.subnatnl-drivers.DB.csv", package="caroline")) 
 
 ## three corresponding (2-column) database-style lookup tables to reduce packaged/storage size of [SubNational] csv 
-nats.alltre.lu <- read.csv(system.file("extdata",'forest',"GFW-loss-alltrees.national-drivers-country.LU.csv", package="caroline")) 
+nats.alltre.lu <- read.csv(system.file("extdata",'forest',"GFW-loss-alltrees.national-drivers-country.LU.csv", package="caroline"))  
 nats.tropic.lu <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.national-drivers-country.LU.csv", package="caroline")) 
-nats.trp.sn.lu <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.subnatnl-drivers-country.LU.csv", package="caroline")) 
+nats.trp.sn.lu <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.subnatnl-drivers-country.LU.csv", package="caroline"))   
 subnats.trp.lu <- read.csv(system.file("extdata",'forest',"GFW-loss-tropical.subnatnl-drivers-subnation.LU.csv", package="caroline")) 
 drivers.lu     <- read.csv(system.file("extdata",'forest',"GFW-loss-driver.LU.csv", package="caroline"))  #same for all 
 
@@ -120,7 +122,7 @@ tropical.loss.sn <- nerge(all.x=T, method='lookup',## demo of the 'nerge()' and 
 @
 \clearpage
 \section{Methods}
-The \Rpackage{caroline} package has several data cleaning (\Rfunction{m()}), conversion \Rfunction{tab2df()}, and convenience functions (eg, \Rfunction{nv()})---along-side several database-style merging (\Rfunction{nerge()}), aggregation (\Rfunction{groupBy()}, \Rfunction{bestBy()}), and reporting (\Rfunction{sstable()}) functions---that are routinely used throughout this vignette and the package itself. Here I use many of these to merge, reconfigure, regroup, and analyze the various tables of the Global Forest Watch data repository.
+The \Rpackage{caroline} package contains several data cleaning [\Rfunction{m()}], conversion [\Rfunction{tab2df()}], and convenience functions [eg, \Rfunction{nv()}]---along-side many database-style merging [\Rfunction{nerge()}], aggregation [\Rfunction{groupBy()}, \Rfunction{bestBy()}], and reporting [\Rfunction{sstable()}] functions---that are routinely used throughout this vignette and the package itself. Here I use many of these to merge, reconfigure, regroup, and analyze the various tables of the Global Forest Watch data repository.
 
 
 
@@ -129,8 +131,7 @@ The \Rpackage{caroline} package has several data cleaning (\Rfunction{m()}), con
 ##################
 ### NATIONAL level
 ###### ALL TREES ######
-alltrees.loss.n.C <- merge(x=alltrees.loss.n, y=C.df, by='country', all.x=T) #merge tree loss data to continent dataset 
-# turn most predictors in to factors
+alltrees.loss.n.C <- merge(x=alltrees.loss.n, y=C.df, by='country', all.x=T) # Merge tree loss data to continent dataset 
 alltrees.loss.n.C$years     <-  cut(x=alltrees.loss.n.C$year, breaks=2002+c(0:4*6)-1)
 alltrees.loss.n.C$continent <- factor(alltrees.loss.n.C$continent)
 alltrees.loss.n.C$driver    <- factor(alltrees.loss.n.C$driver)
@@ -144,8 +145,8 @@ alltrees.loss.n.XTonCd <- tapply(X=alltrees.loss.n.C[,tl.outcome.var],  FUN=sum,
                                                                 INDEX=list(alltrees.loss.n.C$continent, 
                                                                            alltrees.loss.n.C$driver))
 ###### TROPICAL ######
-tropical.loss.n.C <- merge(x=tropical.loss.n, y=C.df, by='country', all.x=T) ##merge tree loss data to continent dataset 
-# turn most predictors in to factors
+tropical.loss.n.C <- merge(x=tropical.loss.n, y=C.df, by='country', all.x=T)# Merge tree loss data to continent dataset  
+# Turn most predictors in to factors
 tropical.loss.n.C$years     <-  cut(x=tropical.loss.n.C$year, breaks=2002+c(0:4*6)-1)
 tropical.loss.n.C$continent <- factor(tropical.loss.n.C$continent)
 tropical.loss.n.C$driver    <- factor(tropical.loss.n.C$driver)
@@ -166,8 +167,8 @@ tropical.nations.TOTs.by.c <- groupBy(df=tropical.loss.n.C, by='country',aggrega
 <<prepare.data.subnational>>=
 #########################
 ### SUB-NATIONAL level*
-tropical.loss.sn.C <- merge(x=tropical.loss.sn, y=C.df, by='country', all.x=T) ##merge tree loss data to continent dataset 
-# turn most predictors in to factors
+tropical.loss.sn.C <- merge(x=tropical.loss.sn, y=C.df, by='country', all.x=T)# Merge tree loss data to continent dataset 
+# Turn most predictors in to factors
 tropical.loss.sn.C$years     <-  cut(x=tropical.loss.sn.C$year, breaks=2002+c(0:4*6)-1) # factorized
 tropical.loss.sn.C$continent <- factor(tropical.loss.sn.C$continent)
 tropical.loss.sn.C$driver    <- factor(tropical.loss.sn.C$driver)
@@ -186,7 +187,7 @@ tropical.subnats.SST.by.yd <- sstable(x=tropical.loss.sn.C, idx.clmns=c('year','
 tropical.subnats.SST.by.Cd <- sstable(x=tropical.loss.sn.C, idx.clmns=c('continent','driver'), ct.clmns=tl.outcome.var)
 tropical.subnats.SST.by.yC <- sstable(x=tropical.loss.sn.C, idx.clmns=c('year','continent'), ct.clmns=tl.outcome.var)
 
-## cross-tabulate the particular sub-national regions with the most de-forestation
+## Cross-tabulate the particular sub-national regions with the most de-forestation
 tropical.loss.sn.XTonCd <- tapply(X=tropical.loss.sn.C[,tl.outcome.var],  FUN=sum,
                                                                 INDEX=list(tropical.loss.sn.C$continent, 
                                                                            tropical.loss.sn.C$driver))
@@ -196,11 +197,11 @@ tropical.loss.sn.XTonCd <- tapply(X=tropical.loss.sn.C[,tl.outcome.var],  FUN=su
 
 \clearpage
 \section{Results}
-Below are five different sparge plots illustrating what the \Rpackage{caroline} package can do to untangle confounding---using such an essentialistic implementation, less-reliant on many other packages. The first three plots use the national ("country") level data, while the much higher-resolution "sub-national" level dataset is investigated somewhat along-side for independent comparison purposes. (Note that the sparge plots have only been generated here for these smaller, national-level, datasets due to size constraints of the vector based plots in a PDF shipped in a compact CRAN package!)
+Below are some examples of possible cross-tabulations and tabular regroupings as well as numerous plots that help extricate the primary factors influencing world-wide forest loss. Plots include a heatmatrix, a confound grid, (+corresponding [per-nation] line-series plots), and two different sparge plots---illustrating what the \Rpackage{caroline} package can do to help in untangling variable \emph{confounding} (\cite{Simpson1951}). Most of the plots use the national ("country") level data (*which should have more realistic estimates of hectares) for tropical regions only, while the much higher-resolution "sub-national" level dataset is investigated supplementally, along-side the national level data, for independent (\& relativistic) comparison purposes. (Note that the sparge plots have also been selectively generated here only for these smaller, national-level, datasets because of size constraints of [the vector-based plots, in this very PDF, shipped with such] a compact [\~{}2MB] CRAN package)
 
 
 <<all.types.continental.totals>>=
-# printing out some summaries of the key variables of interest for each dataset
+# Printing out some summaries of the key variables of interest for each dataset
 variables.of.primary.interest <- c('years','continent','driver',tl.outcome.var)
 summary(alltrees.loss.n.C[ ,variables.of.primary.interest])
 summary(tropical.loss.n.C[ ,variables.of.primary.interest])
@@ -216,16 +217,16 @@ pct(rev(sort(tropical.subnats.TOTs.by.C)));
 \clearpage
 
 <<reporting.tabular.setup>>=
-fp.lines <- 50 # number of lines for printing a full page of tabular data
+fp.lines <- 50 # ()number of lines for printing a full page of tabular data)
 @
 
 <<all.nations.country.totals>>=
-## we can also look a the nations with the most losses per dataset by their individual outcome measures
+## We can also look a the nations with the most losses per dataset by their individual outcome measures
 rev(sort(all.nations.TOTs.by.C))
 print(head(all.nations.TOTs.by.c[rev(order(all.nations.TOTs.by.c[,tl.outcome.var])),], fp.lines/4), row.names=F)
-rev(sort(all.nations.TOTs.by.C))
+rev(sort(tropical.nations.TOTs.by.C))
 print(head(tropical.nations.TOTs.by.c[rev(order(tropical.nations.TOTs.by.c[,tl.outcome.var])),], fp.lines/4), row.names=F)
-rev(sort(all.nations.TOTs.by.C))
+rev(sort(tropical.subnats.TOTs.by.C))
 print(head(tropical.subnats.TOTs.by.c[rev(order(tropical.subnats.TOTs.by.c[,tl.outcome.var])),], fp.lines/4), row.names=F)
 @ 
 \clearpage
@@ -233,11 +234,11 @@ print(head(tropical.subnats.TOTs.by.c[rev(order(tropical.subnats.TOTs.by.c[,tl.o
 <<combining.all.levels>>=
 ## Let's merge together all of the national totals for losses using the three different datasets'
 all3dfs <- list(a.n=all.nations.TOTs.by.c, t.n=tropical.nations.TOTs.by.c, t.sn=tropical.subnats.TOTs.by.c)
-## we want to first just extract a single 'loss,ha' column and name it by country
+## We want to first just extract a single 'loss,ha' column and name it by country
 all3dfs.vl <- lapply(all3dfs, nv, name=c(tl.outcome.var, 'country'))
-## we can then "nerge()" them together using my so-named name-merge function 
+## We can then "nerge()" them together using the so-named 'name-merge' function 
 TOTs.by.c <- nerge(all3dfs.vl)#, method='rownames')
-## we can now use the 'pct()' function to create column wise percentages to better compare across columns
+## We can now use the 'pct()' function to create column wise percentages to better compare across columns
 PTCs.by.c <- pct(TOTs.by.c, clmns=names(TOTs.by.c)) 
 PTCs.by.c <- PTCs.by.c[,grepl('pct',names(PTCs.by.c))] *100
 PTCs.by.c$avg <- apply(PTCs.by.c[,1:2], 1, mean) # avg of just the first two 'national' level columns
@@ -250,8 +251,9 @@ head(PTCs.by.cC[rev(order(PTCs.by.cC$avg)),], fp.lines*3/4)
 @
 \clearpage
 
+
 <<grouping.by.continent>>=
-# now just look at the top best(inverse=T)->[worst] 5 countries in each continent
+# Now just look at the top best(inverse=T)->[worst] 5 countries in each continent
 PTCs.by.cC$country <- rownames(PTCs.by.cC)
 BB.PTC.cC <- bestBy(df=PTCs.by.cC, by='continents', best='avg', top=6, rebind=F, inverse=T)
 print(BB.PTC.cC, row.names=F)
@@ -266,7 +268,7 @@ print(BB.PTC.cC, row.names=F)
 # we've already created a cross-tabulation of loss by continent over the years
 tropical.loss.n.XTonCYs
 
-# let's modify this to a finer level of partitioning so that the dirvers are included split by continents
+# let's modify this to a finer level of partitioning so that the drivers are included split by continents
 tropical.loss.n.XTonYsdC <- tapply(X=tropical.loss.n.C[,tl.outcome.var],  FUN=sum,
                                                                 INDEX=list(tropical.loss.n.C$years, 
                                                                            tropical.loss.n.C$driver,
@@ -277,8 +279,11 @@ tropical.loss.n.XTonYsdC
 @ 
 \clearpage
 
-<<reporting.plot.setup>>=
-## plotting results defaults
+
+
+<<plotting.setup>>=
+##  PLOT DEFAULTS
+# axis limits
 axis.limit.outcome.an <- c(1, max(alltrees.loss.n[,tl.outcome.var])) # log(treeloss, ha)
 axis.limit.outcome.tn <- c(1, max(tropical.loss.n[,tl.outcome.var])) # log(treeloss, ha)
 axis.limit.outcome.sn <- c(1, max(tropical.loss.sn[,tl.outcome.var]))# log(treeloss, ha)
@@ -290,6 +295,66 @@ main.level <- nv(c("(@ national level)",'(@ sub-national level)'), c('ntnl','sub
 main.unit <- "loss in log(ha)"
 @
 
+<<plot.confound.grid.years.vs.loss.by.driver.factor.groups>>=
+## We might want to take a quick peek and see if what appears to be flat loss over these decades 
+## ... isn't actually confounded by driver of the loss: plot.confound.grid() should do the trick
+plot.confound.grid(x=tropical.loss.n, f='tc_loss_ha_log ~ year | driver' )
+## This plot (below) should give us a general idea of which drivers have the highest positive trends
+@
+
+<<hypo.confound.driver.vs.years.countries.cont.cols>>=
+## LINE PLOTS CROSS TABULATION set-up
+## The breakdown of the previous page has inspired looking into trending losses for such leading countries 
+##   Note that this is a much higher resolution (sub-national level) breakdown (eg, islands detail)
+tropical.loss.sn.XTon.ydc <- with(tropical.loss.sn, tapply(X=get(tl.outcome.var),  FUN=sum,
+                                                         INDEX=list(driver,country,year)))
+## Such a breakdown is line-plotted below to gauge which of these countries might continue in hosting losses 
+@ 
+
+
+<<line.graphs.by.country.and.driver>>=
+## LINE PLOTS results defaults
+trop.majors <- c('India','Brazil','Democratic Republic of the Congo')
+trop.africa <- c('Madagascar','Cameroon','Angola','Gabon', 'Republic of the Congo')
+trop.samerc <- c('Colombia','Venezuela','Peru','Bolivia')
+trop.centrl <- c('México','Guatemala','Honduras','Panama')
+trop.S.E.A.MAINLAND <- c('Malaysia','Laos','Vietnam','Thailand','Cambodia','Myanmar')
+trop.S.E.A.ISLANDS <- c('Indonesia','Papua New Guinea','Philippines')
+trop.CONGO <- jungle.DF[jungle.DF$jungle=='Congo','nation']
+trop.AMAZON <- jungle.DF[jungle.DF$jungle=='Amazon','nation']
+
+## colors for countries 
+t.mj.cols <- nv(c('orange3','forestgreen','blue'), trop.majors)
+t.af.cols <- nv(c(paste('deepskyblue', 4:1), 'navyblue'), trop.africa)
+t.sa.cols <- nv(paste('olivedrab',1:4,sep=''),trop.samerc)
+t.ca.cols <- nv(paste('gold',1:4), trop.centrl)
+t.sea.cls <- nv(c(paste('salmon',1:3),paste('tomato',1:3)), trop.S.E.A.MAINLAND)
+t.so.cols <- nv(c('red','orangered3','orange'), trop.S.E.A.ISLANDS)
+
+cntry.cols <- c(t.mj.cols, t.af.cols, t.sa.cols, t.ca.cols, t.sea.cls, t.so.cols)
+
+jungles <- c('CONGO','AMAZON',"S.E.A.MAINLAND","S.E.A.ISLANDS") 
+jung.cols <- nv(c('blue','green','deeppink3','orangered'), jungles)
+fun <- nv(c('mean',rep('sum',3)), drivers.lu$driver) # Agg is MEAN rest are SUM (to use extra space)
+j.ltys <- nv(c(3,rep(2,3)), drivers.lu$driver) 
+
+xs <- 2002:2025 ; ylims <- c(0,max(tropical.loss.sn.XTon.ydc,na.rm=T))
+par(mfrow=c(2,2), mar=c(2.5,2.5,3,1), mgp=c(1.5,.5,0))
+for(driver in drivers.lu$driver){
+ plot(x=xs+c(0,5),y=1:(26-2), pch='', ylim=ylims, ylab='log(loss)', xlab='year', main=driver)
+ for(country in names(cntry.cols)){
+  losses <- tropical.loss.sn.XTon.ydc[driver,,][country,]
+  lines(x=names(losses),y=losses, col=cntry.cols[country])
+  text(x=2025.5, y=losses['2025'], country, adj=0, cex=.4)
+ }
+ for(jungle in jungles){
+  j.losses <- apply(tropical.loss.sn.XTon.ydc[driver,,][get(paste('trop', jungle ,sep='.')),],2, fun[driver], na.rm=T)
+  lines(x=names(j.losses),y=j.losses, col=jung.cols[jungle], lwd=4, lty=j.ltys[driver])
+  text(x=2025.5, y=j.losses['2025'], jungle, adj=0, cex=.4)
+ }
+}
+@
+\clearpage
 
 <<heatmatrix.driver.by.continent>>=
 ###  HEATMATRIX PLOTS FOR ALL THREE DATASETS: [SUB-]NATIONAL & ALL/TROPICAL 
@@ -301,7 +366,6 @@ heatmatrix(round(tropical.loss.n.XTonCd ), text.col='chartreuse', cex=1.1,
 heatmatrix(round(tropical.loss.sn.XTonCd), text.col='chartreuse', cex=1.1, 
     main=paste(main.forest['trp'], "\n", main.unit, main.level['subn']))
 @
-
 
 <<sparge.nation.by.country.driver>>=
 ###  SPARGE PLOTS FOR THE *NATIONAL* LEVEL
@@ -316,10 +380,9 @@ pds.4 <- plot.sparge(x=tropical.loss.n.C, f=model.4, xlim=axis.limit.outcome.tn,
 lines.sparge(x=tropical.loss.n.C, f=model.4, pds=pds.4, cat.order=2:1, lwd=1.5, pt.cex=2,col=gray(.5)) 
 @
 
-
 <<sparge.nation.by.years.by.driver>>=
 # sparge plot: forest loss (@ national level): vs years grouped by loss driver 
-par(las=1, cex=.6, mar=c(3,3,1,1), mgp=c(1.6,.7,0)); horiz.5 <- FALSE
+par(las=1, cex=.6, mar=c(2.5,2.5,1,.2), mgp=c(1.6,.7,0)); horiz.5 <- FALSE
 model.5 <- paste(tl.outcome.var, 'years | driver', sep='~'); 
 pds.5 <- plot.sparge(x=tropical.loss.n.C, f=model.5, horiz=horiz.5, ylim=axis.limit.outcome.tn,
                    pt.cols=driver.cols, xlab='years', ylab='log(forest loss, ha)', las=1,
@@ -334,11 +397,33 @@ lines.sparge(x=tropical.loss.n.C, f=model.5, pds=pds.5, cat.order=2:1, horiz=hor
 
 \begin{figure}
 \begin{center}
+<<label=confound1,fig=TRUE, echo=FALSE, results=hide, width=7, height=9>>=
+<<plot.confound.grid.years.vs.loss.by.driver.factor.groups>>
+@
+\end{center}
+\caption{While losses have been gradually increasing over the years, we see that the slope is higher in both mining/energy as well as in wildfire. We'll take another look at this for the top loss countries on a line-by line basis next. (Note: the above plot [confound-grid] series illustrates only a very mild [concordant slopes] verison of "Simpson's paradox" for confounded variables \cite{Simpson1951} \cite{Sachdeva2023})}
+\label{plotiter:one}
+\end{figure}
+\clearpage
+
+\begin{figure}
+\begin{center}
+<<label=lines1,fig=TRUE, echo=FALSE, results=hide, width=7, height=9>>=
+<<line.graphs.by.country.and.driver>>
+@
+\end{center}
+\caption{A line graph plot of forest losses over time (the past two decades+) partitioned by driver (at the sub-national level). Hectares were summed over all sub-districts to [roughly] re-create [relativistic] national totals for humid tropical forest losses. Note that while the Amazon and Congo rain forests have led the world in [increasing] losses for all categories these past two decades, the island nations of Papua New Guinea \& Indonesia are beginning to emerge with comparable losses, particularly in the extractive industries of mining and logging.  [D.]R. of Congo is [navy]blue (while other African countries are light-blue), Brazil is green (while other S. American countries are green-ish \& C. American countries are shades of yellow), Indonesia is red and Papua New Guinea is brown (\& most other Southeast Asian countries are orange-ish). Jungles [ALLCAPS] that intersect across multiple countries have been summed [or averaged] for most drivers [except mean(Agg.)=dotted] (across encompassing nations) and have thicker dashed lines (key: Congo=blue, Amazon=green, S.E.Asia[mainland]=red, Oceania/S.E.Asia[islands]=orange). Forest loss for food and wood seems to be leveling off in Asia, while they are still on the rise (along with wildfires) in the Congo and Amazon jungles. Mining remains a major driver of forest loss [still steadily increasing] in all jungles of the world. (Note: 'S.E.A ISLANDS' includes Indonesia, Papua New Guinea, and the Philippines)} 
+\label{plotiter:one}
+\end{figure}
+\clearpage
+
+\begin{figure}
+\begin{center}
 <<label=heatmatrix1,fig=TRUE,echo=FALSE, results=hide, width=3.5, height=4>>=
 <<heatmatrix.driver.by.continent>>
 @
 \end{center}
-\caption{Three 'heatmatrix()' plots showing the (intersection of continent by drivers of) types of tree cover loss for each continent. Note that Agriculture dominates all other forms, with African (and possibly also Asian*) agriculture typically ranking highest among world-wide forest loss. The continent of Europe (eg, in Finland and Sweden) non-tropical forestry also registers as a not insignifcant manifestation of planetary-scale losses.}
+\caption{Three 'heatmatrix()' plots showing the (intersection of continent by drivers of) types of tree cover loss for each continent. Note that Agriculture dominates all other forms, with African (and possibly also Asian*) agriculture typically ranking highest among world-wide forest loss. The continent of Europe (eg, in Finland and Sweden) non-tropical forestry also registers as a not insignificant manifestation of planetary-scale losses.}
 \label{test1:one}
 \end{figure}
 \clearpage
@@ -349,7 +434,7 @@ lines.sparge(x=tropical.loss.n.C, f=model.5, pds=pds.5, cat.order=2:1, horiz=hor
 <<sparge.nation.by.country.driver>>
 @
 \end{center}
-\caption{A sparge plot of forest loss (at the national level): vs continent grouped by loss driver. Despite the relatively low loss numbers for North America, do observe the unusual trending of logging in Oceania whose inter-quartile range is apparently outstripping all forms of loss in N. America. (Note that these point represent [\~{}200x24=] thousands of individual nation-year records)}
+\caption{A sparge plot of forest loss (at the national level): vs continent grouped by loss driver. Despite the relatively low loss numbers for North America, do note the unusual trending of logging in Oceania whose inter-quartile range is outstripping all forms of loss in [tropical!] N. America. (Note that these point represent [\~{}200x24=] thousands of individual nation-year records)}
 \label{plotiter:one}
 \end{figure}
 \clearpage
@@ -367,16 +452,19 @@ lines.sparge(x=tropical.loss.n.C, f=model.5, pds=pds.5, cat.order=2:1, horiz=hor
 
 
 \section{Conclusions}
-In addition to showcasing several of the \Rpackage{caroline} package functions (eg, \Rfunction{m()}, \Rfunction{nv()}, \Rfunction{pct()}, \Rfunction{tab2df()}, \Rfunction{nerge()}, \Rfunction{groupBy()}, \Rfunction{bestBy()}, \Rfunction{sstable()}, \Rfunction{heatmatrix()}), I have also introduced the \Rfunction{sparge} plot anew \cite{Schruth2024}, as a possible apotheosis of visual-analytics which promises to facilitate the untangling of deeply confounding data. Using relatively simple formula-based calls to \Rfunction{plot.sparge()}, in conjunction with appropriate merges to (eg, continent) lookup table(s) (via \Rfunction{nerge()}), I have shown the capabilities of this statistical software package to import, clean, re-configure, analyze, and plot larger datasets. 
+In addition to showcasing several of the \Rpackage{caroline} package functions [eg, \Rfunction{m()}, \Rfunction{nv()}, \Rfunction{pct()}, \Rfunction{tab2df()}, \Rfunction{nerge()}, \Rfunction{groupBy()}, \Rfunction{bestBy()}, \Rfunction{sstable()}, \Rfunction{heatmatrix()}, \Rfunction{plot.confound.grid()}], I have also introduced the \Rfunction{sparge} plot anew \cite{Schruth2024}, as a possible apotheosis of visual-analytics, which promises to facilitate the untangling of deeply confounding data. Using relatively simple formula-based calls to \Rfunction{plot.sparge()}, in conjunction with appropriate merges to (eg, continent) lookup table(s) (via \Rfunction{nerge()}), I have shown the capabilities of this statistical software package to import, clean, re-configure, analyze, and plot larger datasets. 
 
-En route, I have re-confirmed what other forestry researchers have observed: that while the dual quandary of the Congo and Amazon rain-forests are of predominate environmental concern \cite{Turubnova2018}, many other nations---including developing tropical countries (India, Mexico, \& Panama) as well as more temperate behemoths (China, Russia, \& U.S.)---also rank among the world's worst in hosting forest losses. This research has also discovered that---the world's (tropical) trees may have been most heavily depleted, over the past several decades, not only in the countries of Africa (Republic of Congo \& Madagascar), South America (esp. Brazil, Columbia, Peru, Venezuela, \& Bolivia), as well as more populous countries in Asia (China \& India), but also many many smaller ones in South East Asia (incl. Malaysia, Laos, Vietnam, Philippines, Thailand, Cambodia, \& Myanmar). And a possibly even more distressing form of distributed depletion is increasingly appearing in more remote island-based countries (eg, of Oceania) that presumably have been previously prohibitively difficult to explore, develop, survey, appraise, harvest/mine, and ship-from internationally--most especially Indonesia and Papua New Guinea. 
+En route, I have re-confirmed what other forestry researchers have observed: that while the dual quandary of the Congo and Amazon rain-forests are of predominate environmental concern \cite{Turubnova2018}, many other regions---including developing tropical countries (India, Mexico, \& Panama) as well as more temperate behemoths (China, Russia, \& U.S.)---also rank among the world's worst in hosting forest losses. This research has also uncovered which tropical forests have been most heavily depleted recently---not only in the countries of Africa ([Democratic \&] Republic of Congo, Cameroon, \& Madagascar), South America (esp. Brazil, Columbia, Peru, Venezuela, \& Bolivia), as well as more populous countries in Asia (China \& India)---but also many many smaller ones in South East Asia (incl. Laos, Vietnam, Malaysia, Thailand, Myanmar, \& Cambodia). And a possibly even more distressing form of distributed depletion (esp. logging) has manifested in more remote island-based countries (eg, Oceania [\& S.E. Asian island nations]) that may have been previously prohibitively difficult to efficiently explore, develop, survey, appraise, harvest/mine, and ship-from internationally---notably in Indonesia, Papua New Guinea, and the Philippines. 
 
-Furthermore, while the primary drivers of world-wide losses have shifted from agriculture and logging (which both seem to be plateauing) to wildfires and minerals \& energy (both still increasing) over this past decade, logging in Oceania appears to be out-pacing all other forms of loss (in Oceania) and, for comparison, even beyond all drivers in [tropical] North America. And, less surprisingly, forest loss due to [rice] agriculture in [south-east] Asia only remains overshadowed by the persistently undeniable environmental-discordance inherent to much of South American [ranching] agriculture---both often deploying slash-and-burn methods to clear land of native trees. Hopefully with increased (internet-based) access to larger higher-resolution datasets (such as the Global Forest Watch data repository, utilized extensively in this report) along with further democratization of computational access and globally-open communication, such remote reporting of these trends, can be reflected back to citizens of these countries so as to raise a counter-balanced awareness toward the potentially predestinate concomitants in such loss---that of persistent climate alteration and biome degradation.  
+The primary drivers of world-wide losses may be shifting from agriculture and logging [both plateauing (except in the Congo \& Papua)] to minerals/energy, and wildfires [gaining (especially in the Congo, Brazil, \& Mexico)] over this past decade. And the logging of islands circa-Oceania (in Papua \& Indonesia) appears to be out-pacing all other forms of loss there---topping all countries [for \emph{both} extractive drivers] especially when these two adjacent countries' losses are considered together. And, less surprisingly, the high levels of forest loss due to [rice] agriculture in [south-east] Asia remains overshadowed only by the undeniable environmental discordance afflicted by South American [ranching] agriculture---both often deploying \emph{slash-and-burn} methods to clear land of native trees \cite{Dufumier2006} \cite{VanVliet2013} \cite{Fujisaka1996}. Hopefully with continued support for high-resolution datasets (as sourced here in the Global Forest Watch data repository)---along with further democratization of telecommunication and computer access---such reporting of these trends may be reflected back to citizens of these countries to raise a counter-balanced awareness of the potentially predestinate concomitants of such loss---that of persistent climate alteration and biome degradation.  
+
+To conclude this brief report on a more uplifting note, it should be added that there are momentous strides being taken recently in mitigating, reversing, and preventing [the negative consequences of] these forest losses. Some nations have made efforts to promote new growth---in China, for example, where an astounding number of trees (\~{} 80 billion) have been planted, as part of their "Great Green Wall" endeavor---in order to mitigate the desertification of their northern provinces \cite{Zheng2026} and reach carbon neutrality goals in the coming decades \cite{Yao2024}. Other countries, like Columbia, plan to institute laws that will require [beef] ranchers to prove that no forests are cleared in order to support grazing by any cattle raised for commerce \cite{Grattan2026}. Malaysia is discouraging illegal logging and re-amalgamating previously partitioned jungles by re-connecting protected areas (eg, national parks) by means of re-wilded forest corridors, which should allow declining faunal census numbers to rebound \cite{Brodie2025}. Indonesia, likewise, is preventing deforestation by both addressing the scourge of bribery and graft in government sectors involved in resource regulation \cite{Forster2024}, revoking licenses for resource companies that are not doing enough to prevent deforestation-exacerbated flooding \cite{Jong2026}, and otherwise taking action toward protection (eg, via ranger forest patrols) for fauna such as the orangutan \cite{Santika2022}, an endangered primate--notably also a member of our own primate family, the Great Apes.  
+
 
 \section{Licensing}
 The \Rpackage{caroline} package is licensed under the Artistic License v2.0: it is therefore free to use and redistribute, 
 however, we, the copyright holders, wish to maintain primary control over any further development.   
-Please be sure to cite \Rpackage{caroline} if you use the package in presentations or work leading to publication.
+Please be sure to cite \Rpackage{caroline} if you use the package in presentations or work leading to publication (see the appropirate entry in the bibliography on the next page).
 
 
 \clearpage
@@ -395,10 +483,10 @@ The Nature Conservancy \url{https://www.nature.org/en-us/}
 Harris, Nancy, and David Gibbs. "Forests absorb twice as much carbon as they emit each year." World Resources Institute 21 (2021). \url{https://www.wri.org/}
 
 \bibitem{Eckholm1979}
-Eckholm, E. (1979). Planting for the Future: Forestry for Human Needs \bibTitle{Worldwatch Paper}, 26.
+Eckholm, E. (1979). "Planting for the Future: Forestry for Human Needs." \bibTitle{Worldwatch Paper}, 26. Worldwatch-Inst., Washington, ,D.C. Ford Foundation, New York, N.Y. 67p
 
 \bibitem{GFW2026}
-Global Forest Watch (2026).\bibTitle{Global forest watch}. World Resources Institute, Washington, DC \url{https://www.globalforestwatch.org}.  
+Global Forest Watch (2026).\bibTitle{Global forest watch}. World Resources Institute, Washington, D.C. \url{https://www.globalforestwatch.org}.  
 
 \bibitem{Hansen2013}
 Hansen, M.C., P.V. Potapov, R. Moore, et al. (2013) "High-Resolution Global Maps of 21st-Century Forest Cover Change." \bibTitle{Science} 342: 850–53. Data available on-line from: \url{https://glad.earthengine.app/view/global-forest-change}. 
@@ -413,7 +501,7 @@ R Core Team (2026) ‘R: A language and environment for statistical computing’
 McGill, R., Tukey, J. W., \& Larsen, W. A. (1978). 'Variations of box plots.' \bibTitle{The american statistician}, 32(1), 12-16.
 
 \bibitem{caroline2026}
-Schruth, D.M. (2026) ‘caroline: A Collection of Database, Data Structure, Visualization, and Utility Functions for R’ \bibTitle{R package}, version 1.1.0 \url{https://CRAN.R-project.org/package=caroline}.
+Schruth, D.M. (2026) ‘caroline: A Collection of Database, Data Structure, Data conversion, Visualization, Reporting, and General Utility Functions [for R]’ \bibTitle{R package}, (version \Sexpr{vers}) \url{https://CRAN.R-project.org/package=caroline}.
 
 \bibitem{stripchart2004}
 Petreshock, J. G., Wolk, S. J., \& Cresitello-Dittmar, M. (2004). \bibTitle{The Data Inspector: Data Visualization for the Chandra Monitoring Project}. In Astronomical Data Analysis Software and Systems IX (Vol. 216, p. 475).
@@ -421,21 +509,54 @@ Petreshock, J. G., Wolk, S. J., \& Cresitello-Dittmar, M. (2004). \bibTitle{The 
 \bibitem{beanplot2008}
 Kampstra, P. (2008). \bibTitle{Beanplot: A boxplot alternative for visual comparison of distributions}. Journal of Statistical Software, 28, 1–9. \url{https://CRAN.R-project.org/package=beanplot}
 
-\bibitem{forest2011}
-Boyles, A. L., Harris, S. F., Rooney, A. A., \& Thayer, K. A. (2011). \bibTitle{Forest Plot Viewer: a new graphing tool}. Epidemiology, 22(5), 746-747. \url{https://CRAN.R-project.org/package=forestplot}
-
 \bibitem{sina2018}
 Sidiropoulos, N., Sohi, S. H., Pedersen, T. L., Porse, B. T., Winther, O., Rapin, N., \& Bagger, F. O. (2018) ‘SinaPlot: an enhanced chart for simple and truthful representation of single observations over multiple classes. ’ \bibTitle{Journal of Computational and Graphical Statistics}, 27(3), 673-676. \url{https://CRAN.R-project.org/package=sinaplot}
 
 \bibitem{raincloud2021}
 Allen, M., Poggiali, D., Whitaker, K., Marshall, T. R., Van Langen, J., \& Kievit, R. A. (2021) ‘Raincloud plots: a multi-platform tool for robust data visualization’ \bibTitle{Wellcome open research}, 4, 63. \url{https://github.com/RainCloudPlots/RainCloudPlots}.
 
+\bibitem{Simpson1951}
+Simpson, E.H. (1951). "The Interpretation of Interaction in Contingency Tables". \bibTitle{Journal of the Royal Statistical Society, Series B.} 13 (2): 238–241. 
+
+\bibitem{Sachdeva2023}
+Sachdeva, M., Fotheringham A.S., (2023). "A Geographical Perspective on Simpson's Paradox" \bibTitle{Journal of Spatial Information Science} DOI: \url{https://doi.org/10.5311/JOSIS.2023.26.212}
+
 \bibitem{Schruth2024}
-Schruth, David M., Christopher N. Templeton, Darryl J. Holman, Eric A. Smith, (2024) "The origins of musicality in the motion of primates", American Journal of Biological Anthropology 184 (1) e24891 DOI: \url{https://doi.org/10.1002/ajpa.24891}.
+Schruth, D.M., Templeton, C.N., Holman, D.J., Smith, E.A. (2024) "The origins of musicality in the motion of primates", American Journal of Biological Anthropology 184 (1) e24891 DOI: \url{https://doi.org/10.1002/ajpa.24891}.
 
 \bibitem{Turubnova2018}
-Turubanova, S., Potapov, P.V., Tyukavina, A. and Hansen, M.C., (2018) Ongoing primary forest loss in Brazil, Democratic Republic of the Congo, and Indonesia. \bibTitle{Environmental Research Letters}, 13(7), p.074028.
+Turubanova, S., Potapov, P.V., Tyukavina, A. and Hansen, M.C. (2018) Ongoing primary forest loss in Brazil, Democratic Republic of the Congo, and Indonesia. \bibTitle{Environmental Research Letters}, 13(7), p.074028. \url{https://iopscience.iop.org/article/10.1088/1748-9326/aacd1c/meta}
 
+\bibitem{Dufumier2006}
+Dufumier, M., (2006) "Slash-and-burn, intensification of rice production, migratory movements, and pioneer front agriculture in Southeast Asia." \bibTitle{Moussons. Recherche en sciences humaines sur l’Asie du Sud-Est}, (9-10), 7-31. DOI: \url{https://doi.org/10.4000/moussons.1979}
+
+\bibitem{Fujisaka1996}
+Fujisaka, S., Bell, W., Thomas, N., Hurtado, L., \& Crawford, E. (1996). "Slash-and-burn agriculture, conversion to pasture, and deforestation in two Brazilian Amazon colonies." \bibTitle{Agriculture, Ecosystems \& Environment},  , 59(1-2), 115-130. DOI \url{https://doi.org/10.1016/0167-8809(96)01015-8}
+  
+\bibitem{VanVliet2013}
+Van Vliet, N., Adams, C., Vieira, I. C. G., \& Mertz, O., (2013) "'Slash and burn' and 'shifting' cultivation systems in forest agriculture frontiers from the Brazilian Amazon." \bibTitle{Society \& Natural Resources}, 26(12), 1454-1467. DOI: \url{https://doi.org/10.1080/08941920.2013.820813}
+
+
+\bibitem{Zheng2026}
+Zheng, L., Zhu, A. L., Dong, Q., Meadows, M. E., Thomas, D. S., Gao, X., [...] \& Chen, R. (2026). "Can China’s Great Green Wall shape efforts to keep the world’s deserts at bay?." \bibTitle{Nature}, 652(8110), 565-568. \url{https://www.nature.com/articles/d41586-026-01102-w}
+
+\bibitem{Yao2024}
+Yao, L., Liu, T., Qin, J., Jiang, H., Yang, L., Smith, P., [...] \& Piao, S. (2024). "Carbon sequestration potential of tree planting in China." \bibTitle{Nature Communications}, 15(1), 8398. \url{https://www.nature.com/articles/s41467-024-52785-6}
+
+\bibitem{Grattan2026}
+Steven Grattan, (2026) "What Colombia’s crackdown on illegal cattle ranching means for deforestation and beef exports" \bibTitle{Los Angeles Times} 
+
+\bibitem{Brodie2025}
+Brodie, J., Lip, B., Hon, J., \& Jayasilan, M. A. (2025). "Connectivity for the conservation of Borneo’s biodiversity." \bibTitle{EcoEvo R-xiv} \url{https://ecoevorxiv.org/repository/view/9822/} 
+
+\bibitem{Jong2026}
+Jong H.N. (2026) "Indonesia revokes forest and mine permits over role in deadly Sumatra landslides" \bibTitle{Mongabay} \url{https://news.mongabay.com/}
+
+\bibitem{Forster2024}
+Forster R., Williams A., Anindito L., \& le Roux, A.C. (2024) "Addressing conflicts of interest and corruption in Indonesia’s energy transition" \bibTitle{U4 Anti-Corruption Resource Centre} 
+
+\bibitem{Santika2022}
+Santika, T., Sherman, J., Voigt, M., Ancrenaz, M., Wich, S. A., Wilson, K. A., [...] \& Meijaard, E. (2022). "Effectiveness of 20 years of conservation investments in protecting orangutans." \bibTitle{Current Biology}, 32(8), 1754-1763. \url{https://doi.org/10.1016/j.cub.2022.02.051}
 
 \end{thebibliography}
 

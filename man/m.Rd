@@ -14,8 +14,8 @@ m(pattern, vect, names="V", types="character", mismatch=NA, ...)
 \item{vect}{A string or vector of strings one which to apply the pattern match.}
 \item{names}{The vector of names of the new variables to be created out of vect. Must be the same length as vect.}
 \item{types}{The vector of types of the new variables to be created out of vect. Must be the same length as vect.}
-\item{mismatch}{What do to when no pattern is found.  NA returns NA, TRUE returns original value (currently only implimented for single match, vector returns)}
-\item{...}{other parameters passed on to grep}
+\item{mismatch}{What do to when no pattern is found.  NA returns NA, TRUE returns original value (currently only implemented for single match, vector returns).}
+\item{...}{other parameters passed on to grep().}
 }
 \seealso{
 \code{\link{sub}, \link{gsub}, \link{regexpr}, \link{grep}, \link{gregexpr}}.

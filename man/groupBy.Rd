@@ -1,6 +1,6 @@
 \name{groupBy}
 \alias{groupBy}
-\title{Group a datafame by a factor and perform aggreate functions.}
+\title{Group a datafame by a factor and perform aggregate functions.}
 \description{
 The R equvalent of a SQL 'group by' call.  }
 \usage{
@@ -11,10 +11,10 @@ groupBy(df, by, aggregation,  clmns=names(df), collapse=',',
 \item{df}{a data frame.}
 \item{by}{the factor (or name of a factor in df) used to determine the grouping.}
 \item{aggregation}{the functions to perform on the output (default is to sum). Suggested functions are: 'sum','mean','var','sd','max','min','length','paste',NULL.}
-\item{clmns}{the colums to include in the output.}
+\item{clmns}{the columns to include in the output.}
 \item{collapse}{string delimiter for columns aggregated via 'paste' concatenation.}
 \item{distinct}{used in conjunction with paste and collapse to only return unique elements in a delimited concatenated string}
-\item{sql}{whether or not to use SQLite to perform the grouping (not yet implimented).}
+\item{sql}{whether or not to use SQLite to perform the grouping (not yet implemented).}
 \item{full.names}{names of the aggregation functions should be appended to the output column names}
 \item{...}{additional parameters (such as na.rm) passed to the underlying aggregate functions.}
 }

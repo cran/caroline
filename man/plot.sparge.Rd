@@ -6,52 +6,50 @@
 \alias{sparge.lines}
 \title{Visually compare all points from different univariate distributions}
 \description{
-Visually compare continuuous univariate distributions using jittered and [progressive levels of] transparent points. This type of diagram plots positions of raw numerical data of comparable univariate distributions with a boxplot overlay indicating quartiles surrounding the central tendency of the underlying points. The distributions are vertically stacked (between) and  jittered (within) as well as translucent in order to reduce overlapping points on larger-N datasets. 
-
-lines.sparge() is an accessory function that, like it's big brother (plot.sparge()) primarily relys upon data (x), a formula (f), and a point dodge factor (cpd), as well as an indication of which direction the plot is facing: sideways (horiz=T) or upwards (horiz=F). There are many params of plot.sparge() that lines.sparge() does not use (out.range, cpw, jit.f, add, lgnd, zl, boxol, alpha, wiskers) but only ones that are unique to lines.sparge(): cat.order, which determines if lines should connect accross groups (=1:2) or within groups (2:1), as well as cols and pds (similar to cpd, but vectorized on either side of 0 for two term models).
+Visually compare continuous univariate distributions using narrow jittered strips of transparently overlapping points (with optional orthogonal trend-line overlays). This type of diagram plots positions of raw numerical data of comparable univariate distributions with a boxplot overlay (indicating quartiles and medians of the underlying points). The distributions are stacked (between) and jittered (within) as well as translucent in order to reduce overlapping points on larger-N datasets. Lines connecting between (or within) these strips (or groups of them) can be added using the appropriate function call to lines.sparge() following a corresponding preceding call to plot.sparge(). 
 }
 \usage{
 \method{plot}{sparge}(x, f=NULL, cat.names=if(is.factor(f)){levels(f)}else{NULL}, 
           out.range=range(unlist(x)), cpd=0, cpw=.4, jit.f=1, horiz=TRUE, add=FALSE,  
-          lgnd='auto', zl=FALSE, pt.cols=1, boxol='gray',alpha=.2, wiskers=1.5, ...)
+          lgnd='auto', zl=FALSE, pt.cols=1, boxol='gray',alpha=.2, whiskers=1.5, ...)
 
 \method{lines}{sparge}(x, f=NULL, pds, cat.order=1:2, 
          horiz=TRUE, rb=nv(rainbow(length(pds)),names(pds)),  pt.pch="+", pt.cex=1.5, ...)
 }
 \arguments{
-\item{x}{a list of numeric vectors OR a dataframe with both numeric and factor columns}
-\item{f}{EITHER a model formula OR a factor [that is same length as a single numeric vector defined by 'x'}
-\item{cat.names}{ordered vector of level names of the primary categorical variable partitioning the distributions}
-\item{cat.order}{a integer vector (length=2) passed only to lines.sparge() corresponding to a two-predictor model passed to f [as a formula]}
-\item{out.range}{range of all possible outcome variable values (recursive loop prespecification)}
-\item{cpd}{categorical position dodge: shifts all categorical plotting positions by this factor}
-\item{pds}{position dodges returned from plot.sparge() and depended on by lines.sparge() to determine positions off of categorical/integers on the predictor axis (default=0)}
-\item{cpw}{categorical position width: width of the (group of) swath(s) of jittered categorical positions (max=.5)}
-\item{jit.f}{factor for random jittering (see 'jitter()'}
-\item{horiz}{should rotate existing plot horizontally? (be sure to double check x & y labels match)}
+\item{x}{a list of numeric vectors OR a dataframe with both numeric and factor columns.}
+\item{f}{EITHER a model formula OR a factor [that is same length as a single numeric vector defined by 'x'.}
+\item{cat.names}{ordered vector of level names of the primary categorical variable partitioning the distributions.}
+\item{cat.order}{a integer vector (length=2) passed only to lines.sparge() corresponding to a two-predictor model passed to f [as a formula].}
+\item{out.range}{range of all possible outcome variable values (recursive loop prespecification).}
+\item{cpd}{categorical position dodge: shifts all categorical plotting positions by this factor.}
+\item{pds}{position dodges returned from plot.sparge() and depended on by lines.sparge() to determine positions off of categorical/integers on the predictor axis (default=0).}
+\item{cpw}{categorical position width: width of the (group of) swath(s) of jittered categorical positions (max=0.5).}
+\item{jit.f}{factor for random jittering (see 'jitter()'.}
+\item{horiz}{should rotate existing plot horizontally? (be sure to double check x & y labels match).}
 \item{add}{should we add to the existing plot?}
-\item{lgnd}{added automatically by default but can be suppressed by setting to NULL or FALSE}
+\item{lgnd}{added automatically by default but can be suppressed by setting to NULL or FALSE.}
 \item{zl}{should we add a horizontal [zero] line at x=0?}
-\item{pt.cols}{(vector of) [base] colors of the points of the distribution(s)}
-\item{rb}{(cpd-length vector of colors, currently uses names (ignored if cat.order=2:1 and col is set}
-\item{boxol}{the color of the outlines of the box plots surrounding all distributions (unless NULL, these will auto grayscale)}
-\item{alpha}{transparency level for [overlapping] points}
-\item{wiskers}{whiskers multiplier == X interquartile range. Same default as boxplot(range=1.5).}
-\item{pt.pch}{point character for plot points in lines.sparge()}
-\item{pt.cex}{character expansion multiplier for plot points in lines.sparge()}
-\item{...}{other parameters passed on to [box]plot}
+\item{pt.cols}{(vector of) [base] colors of the points of the distribution(s).}
+\item{rb}{(cpd-length vector of colors, currently uses names (ignored if cat.order=2:1 and col is set.}
+\item{boxol}{the color of the *outlines* of the box plots surrounding all distributions (unless NULL, these will auto grayscale).}
+\item{alpha}{transparency level for [overlapping] points.}
+\item{whiskers}{whiskers multiplier == X interquartile range. Same default as boxplot(range=1.5).}
+\item{pt.pch}{point character for plot points in lines.sparge().}
+\item{pt.cex}{character expansion multiplier for plot points in lines.sparge().}
+\item{...}{other parameters passed on to [box]plot.}
 }
 \details{
-The function can currently take three different forms of input. First, x can be a list of numeric vectors with no need for f. Second, x can be a single vector that is to be split by factor f, of the same length. Third, x can be a dataframe and f specifies a model formula in the form of "outcome ~ predictor" (simple plot) or "out ~ predictor | control" (nested series plot with legend). The only extra points that are added to the plot are via the output of the boxplot() overlay: appearing as outliers (outside of the 99% normal probability range, as demarcated by the default wisker length) appearing as 'x' annotations as opposed to the 'o's of raw data points.  Various parameters set to NULL can supress different parts of the boxplot overlay (eg, boxol=NULL, wiskers=NULL) or alternatively other parameters can be passed via '...' directly to boxplot (as staplelty=0 and wisklty=0).  Aside from the normal passing of parameters to plot itself, many other parameters for the underlying plotting functions (boxplot, legend, axis, mtext) can also be passed in the following prefixed ways. For boxplot: boxplot.notch, boxplot.col, boxplot.border, boxplot.lty, boxplot.lwd work well (although default logic uses boxplot(range)=sparge(wiskers) (with defaults of wisker.lty=1, staple.lty=1) additionally with a pch of 'x' to mark outliers--but these can all be overidden. Nearly all of the legend params can be passed using the following names: legend.x, legend.y, legend.inset, legend.xjust, legend.border, legend.yjust, legend.box.col, legend.box.lwd legend.lty, legend.title, legend.title.col, legend.title.adj, legend legend=pt.bg, legend.cex, legend.ncol,  legent.text.col, legend.text.font. X and Y axis labels are currently handled via mtext where text and side are handled automatically by xlab & ylab inputs and line is determined by the first integer in par('mgp') [=axis(line)]), however, cex can becontroled by setting a value for "lab.cex". Likewise, the only way, currently, to customize the underlying call to 'axis()' is by assigning a value to axis.cex (but this also just defaults to par('cex').
+The function can currently take three different forms of input. First, x can be a list of numeric vectors with no need for f. Second, x can be a single vector that is to be split by factor f, of the same length. Third, x can be a dataframe and f specifies a model formula in the form of "outcome ~ predictor" (simple plot) or "out ~ predictor | control" (nested series plot with legend). The only extra points that are added to the plot are via the output of the boxplot() overlay: those outliers (outside of the normal probability range, as demarcated by the default whisker length) appearing as 'x' annotations as opposed to the 'o's of raw data points.  Various parameters set to NULL can suppress different parts of the boxplot overlay (eg, boxol=NULL, whiskers=NULL) or alternatively other parameters can be passed via '...' directly to boxplot [as staplelty=0 and whisklty=0].  Aside from the normal passing of parameters to plot itself, many other parameters relevant to other underlying plotting functions (boxplot and legend plus mtext and axis) can also be passed in the following prefixed ways. For boxplot: boxplot.notch, boxplot.col, boxplot.border, boxplot.lty, boxplot.lwd and others work well--although default logic uses boxplot(range)=sparge(whiskers) with defaults of whisker.lty=1, staple.lty=1 and additionally with a pch of 'x' to mark outliers--but these can all be overidden. Nearly all of the legend params can be passed using a prefixed version of param names like so: legend.x, legend.y, legend.inset, legend.xjust, legend.border, legend.yjust, legend.box.col, legend.box.lwd legend.lty, legend.title, legend.title.col, legend.title.adj, legend legend=pt.bg, legend.cex, legend.ncol,  legent.text.col, legend.text.font. X and Y axis labels are currently handled via mtext where text and side are handled automatically by xlab & ylab inputs and line is determined by the first integer in par('mgp') [=axis(line)]), however, cex can be controled by setting a value for "lab.cex". Likewise, the only way, currently, to customize the underlying call to 'axis()' is by assigning a value to axis.cex (but this also just defaults to par('cex').
 
-lines.sparge() must be run after plot.sparge() and addess a series of lines corresponding to the groups plotted using x as data.frame and f as formula. 
+lines.sparge() is an accessory function that, like it's big brothe, plot.sparge(), primarily relys upon data [x], a formula [f], and a point dodge factor [cpd], as well as an indication of which direction the plot is facing: sideways [horiz=TRUE] or upwards [horiz=FALSE]. There are many params of plot.sparge() that lines.sparge() does not use (out.range, cpw, jit.f, add, lgnd, zl, boxol, alpha, whiskers) but only a few ones that are completely unique to lines.sparge(): cat.order, which determines if lines should connect across groups [=1:2] or within groups [2:1], as well as cols and pds (similar to cpd, but vectorized on either side of 0 for two term models). lines.sparge() must be run after plot.sparge() and it adds a series of lines corresponding to the groups plotted using x as data.frame and f as formula.  
 }
 \value{
-a 'sparge' [sprinkler/smear] plot of point distributions
-& the categorical variable dodge positions (only for the control variables) [invisble] 
+A 'sparge' [sprinkler/smear] plot of point distributions
+& the categorical variable dodge positions (only for the control variables) [invisble].
 }
 \seealso{
-See also 'boxplot' and 'stripchart' in package 'graphics' as well as 'sina', 'violin', 'bean', 'ridgelines', and 'raincloud' plots.
+See also build-in functions boxplot(), stripchart(), stem(), and rug() in base-package 'graphics' as well as sina(), vioplot(), beanplot(), beeswarm(), and raincloud() plots (in other extension packages).
 }
 \examples{
 

@@ -8,16 +8,16 @@ This function is a wrapper for merge that supports merging multiple vectors and 
 nerge(l, method=c("rownames", "lookup"), ...)
 }
 \arguments{
-\item{l}{A named list of named vectors (and/or dataframes)}
-\item{method}{A char string of either 'rownames' or 'looup' specifying if unique rownames or db-style '.id' look-ups should join the elements)}
-\item{...}{Other parameters passed on to each sub-merge}
+\item{l}{A named list of named vectors (and/or dataframes).}
+\item{method}{A char string of either 'rownames' or 'lookup' specifying if unique rownames or db-style '.id' look-ups should join the elements).}
+\item{...}{Other parameters passed on to each sub-merge.}
 }
 \seealso{
 \link{merge}
 
 }
 \value{
-A data frame composed of vectors and dataframes with corresponding rownames (& DB-style lookup ".id" columns) 
+A data frame composed of vectors and dataframes with corresponding rownames (& DB-style lookup ".id" columns).
 }
 \examples{
 

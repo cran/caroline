@@ -8,13 +8,13 @@ A trivial one-line function for exp(mean(log()))
 geomean(x)
 }
 \arguments{
-\item{x}{a vector of numeric values}
+\item{x}{a vector of numeric values.}
 }
 \seealso{
 geometric.mean
 }
 \value{
-the geometric mean (a scalar value)
+the geometric mean (a scalar value).
 }
 \examples{
 
